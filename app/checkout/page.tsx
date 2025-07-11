@@ -28,6 +28,7 @@ import {
 export default function CheckoutPage() {
   const { cartItems, getTotalPrice, clearCart } = useCart()
   const router = useRouter()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [formData, setFormData] = useState({
     fullName: "",
     phoneNumber: "",
@@ -119,35 +120,39 @@ Time: ${new Date().toLocaleTimeString()}
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
-        <nav className="bg-white/95 backdrop-blur-md shadow-xl px-4 py-4 border-b border-green-100">
+        <nav className="bg-white/95 backdrop-blur-md shadow-xl px-3 sm:px-4 py-3 sm:py-4 border-b border-green-100">
           <div className="max-w-7xl mx-auto">
             <Link href="/">
-              <div className="flex items-center gap-4 cursor-pointer">
-                <div className="w-14 h-14 gradient-green rounded-full flex items-center justify-center shadow-lg">
-                  <Leaf className="text-white w-8 h-8" />
+              <div className="flex items-center gap-2 sm:gap-4 cursor-pointer">
+                <div className="w-10 h-10 sm:w-14 sm:h-14 gradient-green rounded-full flex items-center justify-center shadow-lg">
+                  <Leaf className="text-white w-5 h-5 sm:w-8 sm:h-8" />
                 </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-gradient">Sri Srinivasa Flour Mills</h1>
-                  <p className="text-sm text-green-600 font-medium">80 Years of Legacy</p>
+                <div className="hidden sm:block">
+                  <h1 className="text-lg sm:text-2xl font-bold text-gradient">Sri Srinivasa Flour Mills</h1>
+                  <p className="text-xs sm:text-sm text-green-600 font-medium">80 Years of Legacy</p>
+                </div>
+                <div className="block sm:hidden">
+                  <h1 className="text-sm font-bold text-gradient">Sri Srinivasa</h1>
+                  <p className="text-xs text-green-600 font-medium">80 Years Legacy</p>
                 </div>
               </div>
             </Link>
           </div>
         </nav>
 
-        <main className="max-w-4xl mx-auto px-4 py-20 text-center">
+        <main className="max-w-4xl mx-auto px-4 py-12 sm:py-20 text-center">
           <div className="animate-slide-up">
-            <div className="w-32 h-32 mx-auto mb-8 gradient-green rounded-full flex items-center justify-center shadow-2xl">
-              <ShoppingCart className="w-16 h-16 text-white" />
+            <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-6 sm:mb-8 gradient-green rounded-full flex items-center justify-center shadow-2xl">
+              <ShoppingCart className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
             </div>
-            <h1 className="text-4xl font-bold text-gradient mb-6">No Items in Cart</h1>
-            <p className="text-xl text-gray-600 mb-12 max-w-md mx-auto">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gradient mb-4 sm:mb-6">No Items in Cart</h1>
+            <p className="text-lg sm:text-xl text-gray-600 mb-8 sm:mb-12 max-w-md mx-auto px-4">
               Please add items to your cart before checkout.
             </p>
             <Link href="/products">
-              <Button className="gradient-green text-white px-12 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 rounded-full">
+              <Button className="gradient-green text-white px-8 sm:px-12 py-3 sm:py-4 text-base sm:text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 rounded-full w-full sm:w-auto">
                 Browse Products
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </Link>
           </div>
@@ -159,45 +164,52 @@ Time: ${new Date().toLocaleTimeString()}
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       {/* Navigation */}
-      <nav className="bg-white/95 backdrop-blur-md shadow-xl px-4 py-4 border-b border-green-100">
+      <nav className="bg-white/95 backdrop-blur-md shadow-xl px-3 sm:px-4 py-3 sm:py-4 border-b border-green-100">
         <div className="max-w-7xl mx-auto">
           <Link href="/">
-            <div className="flex items-center gap-4 cursor-pointer">
-              <div className="w-14 h-14 gradient-green rounded-full flex items-center justify-center shadow-lg">
-                <Leaf className="text-white w-8 h-8" />
+            <div className="flex items-center gap-2 sm:gap-4 cursor-pointer">
+              <div className="w-10 h-10 sm:w-14 sm:h-14 gradient-green rounded-full flex items-center justify-center shadow-lg">
+                <Leaf className="text-white w-5 h-5 sm:w-8 sm:h-8" />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gradient">Sri Srinivasa Flour Mills</h1>
-                <p className="text-sm text-green-600 font-medium">80 Years of Legacy</p>
+              <div className="hidden sm:block">
+                <h1 className="text-lg sm:text-2xl font-bold text-gradient">Sri Srinivasa Flour Mills</h1>
+                <p className="text-xs sm:text-sm text-green-600 font-medium">80 Years of Legacy</p>
+              </div>
+              <div className="block sm:hidden">
+                <h1 className="text-sm font-bold text-gradient">Sri Srinivasa</h1>
+                <p className="text-xs text-green-600 font-medium">80 Years Legacy</p>
               </div>
             </div>
           </Link>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-gradient mb-6">Checkout</h1>
-          <div className="w-32 h-1 gradient-green mx-auto mb-6 rounded-full"></div>
-          <p className="text-xl text-gray-600">Complete your order</p>
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-5xl font-bold text-gradient mb-4 sm:mb-6">Checkout</h1>
+          <div className="w-24 sm:w-32 h-1 gradient-green mx-auto mb-4 sm:mb-6 rounded-full"></div>
+          <p className="text-base sm:text-xl text-gray-600">Complete your order</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
           {/* Customer Information Form */}
           <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm">
             <CardHeader className="gradient-green text-white rounded-t-lg">
-              <CardTitle className="text-2xl flex items-center gap-2">
-                <User className="w-6 h-6" />
+              <CardTitle className="text-lg sm:text-2xl flex items-center gap-2">
+                <User className="w-5 h-5 sm:w-6 sm:h-6" />
                 Customer Information
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-8">
-              <form onSubmit={handleSubmit} className="space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <CardContent className="p-4 sm:p-8">
+              <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
-                    <Label htmlFor="fullName" className="text-gray-700 font-semibold text-lg flex items-center gap-2">
-                      <User className="w-4 h-4" />
+                    <Label
+                      htmlFor="fullName"
+                      className="text-gray-700 font-semibold text-sm sm:text-lg flex items-center gap-2"
+                    >
+                      <User className="w-3 h-3 sm:w-4 sm:h-4" />
                       Full Name *
                     </Label>
                     <Input
@@ -206,7 +218,7 @@ Time: ${new Date().toLocaleTimeString()}
                       value={formData.fullName}
                       onChange={handleInputChange}
                       required
-                      className="mt-2 h-12 border-green-200 focus:border-green-500 rounded-lg"
+                      className="mt-2 h-10 sm:h-12 border-green-200 focus:border-green-500 rounded-lg text-sm sm:text-base"
                       placeholder="Enter your full name"
                     />
                   </div>
@@ -214,9 +226,9 @@ Time: ${new Date().toLocaleTimeString()}
                   <div>
                     <Label
                       htmlFor="phoneNumber"
-                      className="text-gray-700 font-semibold text-lg flex items-center gap-2"
+                      className="text-gray-700 font-semibold text-sm sm:text-lg flex items-center gap-2"
                     >
-                      <Phone className="w-4 h-4" />
+                      <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
                       Phone Number *
                     </Label>
                     <Input
@@ -226,16 +238,19 @@ Time: ${new Date().toLocaleTimeString()}
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
                       required
-                      className="mt-2 h-12 border-green-200 focus:border-green-500 rounded-lg"
+                      className="mt-2 h-10 sm:h-12 border-green-200 focus:border-green-500 rounded-lg text-sm sm:text-base"
                       placeholder="Enter your phone number"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
-                    <Label htmlFor="flatNo" className="text-gray-700 font-semibold text-lg flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
+                    <Label
+                      htmlFor="flatNo"
+                      className="text-gray-700 font-semibold text-sm sm:text-lg flex items-center gap-2"
+                    >
+                      <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
                       Flat/House No *
                     </Label>
                     <Input
@@ -244,13 +259,13 @@ Time: ${new Date().toLocaleTimeString()}
                       value={formData.flatNo}
                       onChange={handleInputChange}
                       required
-                      className="mt-2 h-12 border-green-200 focus:border-green-500 rounded-lg"
+                      className="mt-2 h-10 sm:h-12 border-green-200 focus:border-green-500 rounded-lg text-sm sm:text-base"
                       placeholder="Flat/House number"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="streetName" className="text-gray-700 font-semibold text-lg">
+                    <Label htmlFor="streetName" className="text-gray-700 font-semibold text-sm sm:text-lg">
                       Street Name *
                     </Label>
                     <Input
@@ -259,15 +274,15 @@ Time: ${new Date().toLocaleTimeString()}
                       value={formData.streetName}
                       onChange={handleInputChange}
                       required
-                      className="mt-2 h-12 border-green-200 focus:border-green-500 rounded-lg"
+                      className="mt-2 h-10 sm:h-12 border-green-200 focus:border-green-500 rounded-lg text-sm sm:text-base"
                       placeholder="Street name"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                   <div>
-                    <Label htmlFor="city" className="text-gray-700 font-semibold text-lg">
+                    <Label htmlFor="city" className="text-gray-700 font-semibold text-sm sm:text-lg">
                       City *
                     </Label>
                     <Input
@@ -276,13 +291,13 @@ Time: ${new Date().toLocaleTimeString()}
                       value={formData.city}
                       onChange={handleInputChange}
                       required
-                      className="mt-2 h-12 border-green-200 focus:border-green-500 rounded-lg"
+                      className="mt-2 h-10 sm:h-12 border-green-200 focus:border-green-500 rounded-lg text-sm sm:text-base"
                       placeholder="City"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="state" className="text-gray-700 font-semibold text-lg">
+                    <Label htmlFor="state" className="text-gray-700 font-semibold text-sm sm:text-lg">
                       State *
                     </Label>
                     <Input
@@ -291,13 +306,13 @@ Time: ${new Date().toLocaleTimeString()}
                       value={formData.state}
                       onChange={handleInputChange}
                       required
-                      className="mt-2 h-12 border-green-200 focus:border-green-500 rounded-lg"
+                      className="mt-2 h-10 sm:h-12 border-green-200 focus:border-green-500 rounded-lg text-sm sm:text-base"
                       placeholder="State"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="pinCode" className="text-gray-700 font-semibold text-lg">
+                    <Label htmlFor="pinCode" className="text-gray-700 font-semibold text-sm sm:text-lg">
                       PIN Code *
                     </Label>
                     <Input
@@ -306,29 +321,29 @@ Time: ${new Date().toLocaleTimeString()}
                       value={formData.pinCode}
                       onChange={handleInputChange}
                       required
-                      className="mt-2 h-12 border-green-200 focus:border-green-500 rounded-lg"
+                      className="mt-2 h-10 sm:h-12 border-green-200 focus:border-green-500 rounded-lg text-sm sm:text-base"
                       placeholder="PIN Code"
                     />
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col gap-3 sm:gap-4">
                   <Button
                     type="button"
                     onClick={downloadCartDetails}
                     variant="outline"
-                    className="flex-1 border-green-600 text-green-600 hover:bg-green-50 bg-transparent h-14 text-lg font-semibold rounded-full"
+                    className="border-green-600 text-green-600 hover:bg-green-50 bg-transparent h-12 sm:h-14 text-sm sm:text-lg font-semibold rounded-full"
                   >
-                    <Download className="w-5 h-5 mr-2" />
+                    <Download className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                     Download Cart Details
                   </Button>
 
                   <Button
                     type="submit"
-                    className="flex-1 gradient-green text-white h-14 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 rounded-full"
+                    className="gradient-green text-white h-12 sm:h-14 text-sm sm:text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 rounded-full"
                   >
                     Confirm Order via WhatsApp
-                    <ArrowRight className="ml-2 w-5 h-5" />
+                    <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                   </Button>
                 </div>
               </form>
@@ -336,38 +351,41 @@ Time: ${new Date().toLocaleTimeString()}
           </Card>
 
           {/* Order Summary */}
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm">
               <CardHeader className="gradient-green text-white rounded-t-lg">
-                <CardTitle className="text-2xl flex items-center gap-2">
-                  <ShoppingCart className="w-6 h-6" />
+                <CardTitle className="text-lg sm:text-2xl flex items-center gap-2">
+                  <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />
                   Order Summary
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-8 space-y-6">
-                <div className="space-y-4 max-h-80 overflow-y-auto">
+              <CardContent className="p-4 sm:p-8 space-y-4 sm:space-y-6">
+                <div className="space-y-3 sm:space-y-4 max-h-60 sm:max-h-80 overflow-y-auto">
                   {cartItems.map((item) => (
-                    <div key={item.name} className="flex justify-between items-center p-4 bg-green-50 rounded-xl">
-                      <div className="flex-1">
-                        <p className="font-semibold text-gray-800 text-lg">{item.name}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Badge className="gradient-green text-white border-0 text-xs">{item.category}</Badge>
-                          <p className="text-sm text-gray-600">
+                    <div
+                      key={item.name}
+                      className="flex justify-between items-center p-3 sm:p-4 bg-green-50 rounded-xl"
+                    >
+                      <div className="flex-1 pr-2">
+                        <p className="font-semibold text-gray-800 text-sm sm:text-lg line-clamp-2">{item.name}</p>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1">
+                          <Badge className="gradient-green text-white border-0 text-xs w-fit">{item.category}</Badge>
+                          <p className="text-xs sm:text-sm text-gray-600">
                             {item.quantity}kg × ₹{item.price}
                           </p>
                         </div>
                       </div>
-                      <p className="font-bold text-green-600 text-xl">₹{item.price * item.quantity}</p>
+                      <p className="font-bold text-green-600 text-lg sm:text-xl">₹{item.price * item.quantity}</p>
                     </div>
                   ))}
                 </div>
 
                 <hr className="border-green-200" />
 
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl">
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 sm:p-6 rounded-xl">
                   <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-gray-800">Total:</span>
-                    <span className="text-4xl font-bold text-gradient">₹{getTotalPrice()}</span>
+                    <span className="text-xl sm:text-2xl font-bold text-gray-800">Total:</span>
+                    <span className="text-2xl sm:text-4xl font-bold text-gradient">₹{getTotalPrice()}</span>
                   </div>
                 </div>
               </CardContent>
@@ -375,12 +393,12 @@ Time: ${new Date().toLocaleTimeString()}
 
             {/* Process Info */}
             <Card className="border-0 shadow-xl bg-gradient-to-br from-blue-50 to-cyan-50">
-              <CardContent className="p-8">
-                <h4 className="font-bold text-blue-800 mb-6 text-xl flex items-center gap-2">
-                  <Shield className="w-6 h-6" />
+              <CardContent className="p-4 sm:p-8">
+                <h4 className="font-bold text-blue-800 mb-4 sm:mb-6 text-lg sm:text-xl flex items-center gap-2">
+                  <Shield className="w-5 h-5 sm:w-6 sm:h-6" />
                   Order Process
                 </h4>
-                <ol className="space-y-4">
+                <ol className="space-y-3 sm:space-y-4">
                   {[
                     { icon: User, text: "Fill in your details" },
                     { icon: Download, text: "Download cart details (optional)" },
@@ -388,12 +406,12 @@ Time: ${new Date().toLocaleTimeString()}
                     { icon: Mail, text: "WhatsApp will open with your order" },
                     { icon: Truck, text: "Send the message to complete your order" },
                   ].map((step, index) => (
-                    <li key={index} className="flex items-center gap-4 text-blue-700">
-                      <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                    <li key={index} className="flex items-center gap-3 sm:gap-4 text-blue-700">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm">
                         {index + 1}
                       </div>
-                      <step.icon className="w-5 h-5 text-blue-600" />
-                      <span className="font-medium">{step.text}</span>
+                      <step.icon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+                      <span className="font-medium text-sm sm:text-base">{step.text}</span>
                     </li>
                   ))}
                 </ol>
@@ -404,18 +422,18 @@ Time: ${new Date().toLocaleTimeString()}
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16 mt-20">
+      <footer className="bg-gray-900 text-white py-12 sm:py-16 mt-16 sm:mt-20">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="w-16 h-16 gradient-green rounded-full flex items-center justify-center shadow-lg">
-              <Leaf className="text-white w-8 h-8" />
+          <div className="flex items-center justify-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 gradient-green rounded-full flex items-center justify-center shadow-lg">
+              <Leaf className="text-white w-6 h-6 sm:w-8 sm:h-8" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold">Sri Srinivasa Flour Mills</h3>
-              <p className="text-green-400 font-medium">80 Years of Legacy</p>
+              <h3 className="text-lg sm:text-2xl font-bold">Sri Srinivasa Flour Mills</h3>
+              <p className="text-green-400 font-medium text-sm sm:text-base">80 Years of Legacy</p>
             </div>
           </div>
-          <p className="text-gray-400">© 2024 Sri Srinivasa Flour Mills. All rights reserved.</p>
+          <p className="text-gray-400 text-sm sm:text-base">© 2024 Sri Srinivasa Flour Mills. All rights reserved.</p>
         </div>
       </footer>
     </div>
