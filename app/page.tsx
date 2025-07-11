@@ -156,7 +156,7 @@ export default function HomePage() {
                     <Star key={star} className="w-4 h-4 sm:w-6 sm:h-6 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <span className="font-medium text-sm sm:text-base">5.0 Rating</span>
+                <span className="font-medium text-sm sm:text-base">4.8 Rating</span>
               </div>
             </div>
           </div>
@@ -214,7 +214,7 @@ export default function HomePage() {
                     <Star key={star} className="w-5 h-5 sm:w-7 sm:h-7 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <span className="text-gray-700 text-base sm:text-lg font-semibold">5.0 Customer Rating</span>
+                <span className="text-gray-700 text-base sm:text-lg font-semibold">4.8 Customer Rating</span>
               </div>
 
               <Link href="/products">
@@ -350,7 +350,7 @@ export default function HomePage() {
             <div className="text-center sm:text-left">
               <h4 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-green-400">Quick Links</h4>
               <ul className="space-y-2 sm:space-y-3">
-                {["Home", "Products", "Cart", "About Us"].map((link) => (
+                {["Home", "Products", "Cart", ].map((link) => (
                   <li key={link}>
                     <Link
                       href={link === "Home" ? "/" : `/${link.toLowerCase().replace(" ", "")}`}
@@ -395,7 +395,7 @@ export default function HomePage() {
 
           <div className="border-t border-gray-700 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center">
             <p className="text-gray-400 text-sm sm:text-base">
-              © 2024 Sri Srinivasa Flour Mills. All rights reserved. Made with ❤️ for quality.
+              © 2024 Sri Srinivasa Flour Mills. All rights reserved by BIT PATTERNS. Made with ❤️ for quality.
             </p>
           </div>
         </div>
