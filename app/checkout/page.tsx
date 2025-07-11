@@ -26,7 +26,7 @@ import {
 } from "lucide-react"
 
 export default function CheckoutPage() {
-  const { cartItems, getTotalPrice, clearCart } = useCart()
+  const { cartItems, getTotalPrice, getDeliveryCharge, getFinalTotal, clearCart } = useCart()
   const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [formData, setFormData] = useState({
@@ -46,6 +46,11 @@ export default function CheckoutPage() {
     }))
   }
 
+  const subtotal = getTotalPrice()
+  const deliveryCharge = getDeliveryCharge()
+  const finalTotal = getFinalTotal()
+  const isFreeDelivery = deliveryCharge === 0
+
   const generateWhatsAppMessage = () => {
     const orderDetails = cartItems
       .map((item) => `- ${item.name} x ${item.quantity}kg = ₹${item.price * item.quantity}`)
@@ -53,7 +58,9 @@ export default function CheckoutPage() {
 
     const fullAddress = `${formData.flatNo}, ${formData.streetName}, ${formData.city}, ${formData.state} - ${formData.pinCode}`
 
-    const message = `Hello, I want to place an order.%0A%0AName: ${formData.fullName}%0APhone: ${formData.phoneNumber}%0AAddress: ${fullAddress}%0A%0AOrder Details:%0A${orderDetails}%0A%0ATotal: ₹${getTotalPrice()}`
+    const deliveryInfo = isFreeDelivery ? "FREE Delivery" : `Delivery Charge: ₹${deliveryCharge}`
+
+    const message = `Hello, I want to place an order.%0A%0AName: ${formData.fullName}%0APhone: ${formData.phoneNumber}%0AAddress: ${fullAddress}%0A%0AOrder Details:%0A${orderDetails}%0A%0ASubtotal: ₹${subtotal}%0A${deliveryInfo}%0ATotal Amount: ₹${finalTotal}`
 
     return `https://api.whatsapp.com/send?phone=917904356029&text=${message}`
   }
@@ -64,6 +71,8 @@ export default function CheckoutPage() {
       .join("\n")
 
     const fullAddress = `${formData.flatNo}, ${formData.streetName}, ${formData.city}, ${formData.state} - ${formData.pinCode}`
+
+    const deliveryInfo = isFreeDelivery ? "FREE Delivery (You saved ₹120!)" : `Delivery Charge: ₹${deliveryCharge}`
 
     const content = `Sri Srinivasa Flour Mills - Order Details
 =====================================
@@ -76,7 +85,9 @@ Address: ${fullAddress}
 Order Details:
 ${orderDetails}
 
-Total Amount: ₹${getTotalPrice()}
+Subtotal: ₹${subtotal}
+${deliveryInfo}
+Total Amount: ₹${finalTotal}
 
 Date: ${new Date().toLocaleDateString()}
 Time: ${new Date().toLocaleTimeString()}
@@ -191,6 +202,25 @@ Time: ${new Date().toLocaleTimeString()}
           <div className="w-24 sm:w-32 h-1 gradient-green mx-auto mb-4 sm:mb-6 rounded-full"></div>
           <p className="text-base sm:text-xl text-gray-600">Complete your order</p>
         </div>
+
+        {/* Free Delivery Banner */}
+        {isFreeDelivery && (
+          <div className="mb-6 sm:mb-8">
+            <Card className="border-2 border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-center gap-3 text-center">
+                  <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+                  <div>
+                    <p className="font-semibold text-green-800 text-sm sm:text-base">
+                      🎉 Congratulations! You've earned FREE delivery!
+                    </p>
+                    <p className="text-green-600 text-xs sm:text-sm">You saved ₹120 on delivery charges</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
           {/* Customer Information Form */}
@@ -382,11 +412,41 @@ Time: ${new Date().toLocaleTimeString()}
 
                 <hr className="border-green-200" />
 
+                {/* Pricing Breakdown */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700 font-medium">Subtotal:</span>
+                    <span className="font-bold text-gray-800">₹{subtotal}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Truck className="w-4 h-4 text-gray-600" />
+                      <span className="text-gray-700 font-medium">Delivery:</span>
+                    </div>
+                    <div className="text-right">
+                      {isFreeDelivery ? (
+                        <div>
+                          <span className="font-bold text-green-600">FREE</span>
+                          <p className="text-xs text-gray-500 line-through">₹120</p>
+                        </div>
+                      ) : (
+                        <span className="font-bold text-gray-800">₹{deliveryCharge}</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <hr className="border-green-200" />
+
                 <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 sm:p-6 rounded-xl">
                   <div className="flex justify-between items-center">
                     <span className="text-xl sm:text-2xl font-bold text-gray-800">Total:</span>
-                    <span className="text-2xl sm:text-4xl font-bold text-gradient">₹{getTotalPrice()}</span>
+                    <span className="text-2xl sm:text-4xl font-bold text-gradient">₹{finalTotal}</span>
                   </div>
+                  {isFreeDelivery && (
+                    <p className="text-sm text-green-600 mt-2 text-center">🎉 You saved ₹120 on delivery!</p>
+                  )}
                 </div>
               </CardContent>
             </Card>
