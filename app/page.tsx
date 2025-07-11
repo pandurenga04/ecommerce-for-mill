@@ -384,7 +384,7 @@ export default function HomePage() {
                     <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
                   <span className="text-gray-300 text-sm sm:text-base text-center sm:text-left">
-                    Sri Srinivasa Flour Mills ,Srivilliputhur
+                    Sri Srinivasa Flour Mills Srivilliputhur
                     <br />
                     Tamil Nadu, India
                   </span>
