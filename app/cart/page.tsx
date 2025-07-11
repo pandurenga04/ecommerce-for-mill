@@ -5,11 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useCart } from "@/contexts/cart-context"
 import Link from "next/link"
-import { Minus, Plus, Trash2, ShoppingCart, Leaf, ArrowRight, Star, Menu, X } from "lucide-react"
+import { Minus, Plus, Trash2, ShoppingCart, Leaf, ArrowRight, Star, Menu, X, Truck } from 'lucide-react'
 import { useState } from "react"
 
 export default function CartPage() {
-  const { cartItems, updateQuantity, removeFromCart, getTotalPrice } = useCart()
+  const { cartItems, updateQuantity, removeFromCart, getTotalPrice, getDeliveryCharge, getFinalTotal } = useCart()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   if (cartItems.length === 0) {
@@ -112,6 +112,11 @@ export default function CartPage() {
     )
   }
 
+  const subtotal = getTotalPrice()
+  const deliveryCharge = getDeliveryCharge()
+  const finalTotal = getFinalTotal()
+  const isFreeDelivery = deliveryCharge === 0
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       {/* Navigation */}
@@ -184,6 +189,46 @@ export default function CartPage() {
           <div className="w-24 sm:w-32 h-1 gradient-green mx-auto mb-4 sm:mb-6 rounded-full"></div>
           <p className="text-base sm:text-xl text-gray-600">Review your selected items</p>
         </div>
+
+        {/* Free Delivery Banner */}
+        {!isFreeDelivery && subtotal < 799 && (
+          <div className="mb-6 sm:mb-8">
+            <Card className="border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-yellow-50">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-center gap-3 text-center">
+                  <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
+                  <div>
+                    <p className="font-semibold text-orange-800 text-sm sm:text-base">
+                      Add ₹{799 - subtotal} more for FREE delivery!
+                    </p>
+                    <p className="text-orange-600 text-xs sm:text-sm">
+                      Currently: ₹120 delivery charge • Free delivery on orders ₹799+
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Free Delivery Success Banner */}
+        {isFreeDelivery && (
+          <div className="mb-6 sm:mb-8">
+            <Card className="border-2 border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-center gap-3 text-center">
+                  <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+                  <div>
+                    <p className="font-semibold text-green-800 text-sm sm:text-base">
+                      🎉 Congratulations! You've earned FREE delivery!
+                    </p>
+                    <p className="text-green-600 text-xs sm:text-sm">Your order qualifies for free shipping</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Cart Items */}
@@ -290,11 +335,43 @@ export default function CartPage() {
 
                 <hr className="border-green-200" />
 
+                {/* Pricing Breakdown */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700 font-medium">Subtotal:</span>
+                    <span className="font-bold text-gray-800">₹{subtotal}</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Truck className="w-4 h-4 text-gray-600" />
+                      <span className="text-gray-700 font-medium">Delivery:</span>
+                    </div>
+                    <div className="text-right">
+                      {isFreeDelivery ? (
+                        <div>
+                          <span className="font-bold text-green-600">FREE</span>
+                          <p className="text-xs text-gray-500 line-through">₹120</p>
+                        </div>
+                      ) : (
+                        <span className="font-bold text-gray-800">₹{deliveryCharge}</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <hr className="border-green-200" />
+
                 <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 sm:p-6 rounded-xl">
                   <div className="flex justify-between items-center">
                     <span className="text-xl sm:text-2xl font-bold text-gray-800">Total:</span>
-                    <span className="text-2xl sm:text-3xl font-bold text-gradient">₹{getTotalPrice()}</span>
+                    <span className="text-2xl sm:text-3xl font-bold text-gradient">₹{finalTotal}</span>
                   </div>
+                  {isFreeDelivery && (
+                    <p className="text-sm text-green-600 mt-2 text-center">
+                      🎉 You saved ₹120 on delivery!
+                    </p>
+                  )}
                 </div>
 
                 <Link href="/checkout" className="block">
