@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { useCart } from "@/contexts/cart-context"
 import Link from "next/link"
-import { ShoppingCart, Search, Check, Leaf, Star, Filter, Grid, List } from "lucide-react"
+import { ShoppingCart, Search, Check, Leaf, Star, Filter, Grid, List, Menu, X } from 'lucide-react'
 
 const products = {
   "Masala Powders": [
@@ -54,7 +54,7 @@ const products = {
     {
       name: "Pearl Millet Flour (Kambu)",
       price: 65,
-      image: "https://www.terraearthfood.com/cdn/shop/products/03700053a3bffc164dec344e05bb28bf53b460a4.jpg?v=1583655833",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkmXdHLjEqcMsqFNtjPmy7atRZ56xoMU0oAw&s",
       rating: 4.7,
       reviews: 123,
     },
@@ -97,6 +97,8 @@ export default function ProductsPage() {
   const [addedToCart, setAddedToCart] = useState<Record<string, boolean>>({})
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [sortBy, setSortBy] = useState("name")
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const { addToCart, cartItems } = useCart()
 
   const allProducts = Object.entries(products).flatMap(([category, items]) =>
@@ -142,20 +144,26 @@ export default function ProductsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       {/* Navigation */}
-      <nav className="bg-white/95 backdrop-blur-md shadow-xl px-4 py-4 sticky top-0 z-50 border-b border-green-100">
+      <nav className="bg-white/95 backdrop-blur-md shadow-xl px-3 sm:px-4 py-3 sm:py-4 sticky top-0 z-50 border-b border-green-100">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link href="/">
-            <div className="flex items-center gap-4 cursor-pointer">
-              <div className="w-14 h-14 gradient-green rounded-full flex items-center justify-center shadow-lg">
-                <Leaf className="text-white w-8 h-8" />
+            <div className="flex items-center gap-2 sm:gap-4 cursor-pointer">
+              <div className="w-10 h-10 sm:w-14 sm:h-14 gradient-green rounded-full flex items-center justify-center shadow-lg">
+                <Leaf className="text-white w-5 h-5 sm:w-8 sm:h-8" />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gradient">Sri Srinivasa Flour Mills</h1>
-                <p className="text-sm text-green-600 font-medium">80 Years of Legacy</p>
+              <div className="hidden sm:block">
+                <h1 className="text-lg sm:text-2xl font-bold text-gradient">Sri Srinivasa Flour Mills</h1>
+                <p className="text-xs sm:text-sm text-green-600 font-medium">80 Years of Legacy</p>
+              </div>
+              <div className="block sm:hidden">
+                <h1 className="text-sm font-bold text-gradient">Sri Srinivasa</h1>
+                <p className="text-xs text-green-600 font-medium">80 Years Legacy</p>
               </div>
             </div>
           </Link>
-          <div className="flex items-center gap-4">
+          
+          {/* Desktop Menu */}
+          <div className="hidden sm:flex items-center gap-4">
             <Link href="/">
               <Button variant="ghost" className="text-green-700 hover:text-green-600 hover:bg-green-50 font-medium">
                 Home
@@ -168,38 +176,88 @@ export default function ProductsPage() {
               </Button>
             </Link>
           </div>
+
+          {/* Mobile Menu */}
+          <div className="flex sm:hidden items-center gap-2">
+            <Link href="/cart">
+              <Button size="sm" className="gradient-green text-white px-2 py-1 text-xs">
+                <ShoppingCart className="w-3 h-3 mr-1" />
+                {cartItemCount}
+              </Button>
+            </Link>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-1"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </Button>
+          </div>
         </div>
+
+        {/* Mobile Menu Dropdown */}
+        {mobileMenuOpen && (
+          <div className="sm:hidden mt-4 pb-4 border-t border-green-100">
+            <div className="flex flex-col space-y-2 pt-4">
+              <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+                <Button variant="ghost" className="w-full justify-start text-green-700 hover:bg-green-50">
+                  Home
+                </Button>
+              </Link>
+              <Link href="/cart" onClick={() => setMobileMenuOpen(false)}>
+                <Button variant="ghost" className="w-full justify-start text-green-700 hover:bg-green-50">
+                  Cart ({cartItemCount})
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-gradient mb-6">Our Premium Products</h1>
-          <div className="w-32 h-1 gradient-green mx-auto mb-6 rounded-full"></div>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-5xl font-bold text-gradient mb-4 sm:mb-6">Our Premium Products</h1>
+          <div className="w-24 sm:w-32 h-1 gradient-green mx-auto mb-4 sm:mb-6 rounded-full"></div>
+          <p className="text-base sm:text-xl text-gray-600 max-w-2xl mx-auto px-4">
             Discover our collection of traditional flours and authentic masala powders
           </p>
         </div>
 
+        {/* Mobile Filters Toggle */}
+        <div className="sm:hidden mb-6">
+          <Button
+            onClick={() => setFiltersOpen(!filtersOpen)}
+            variant="outline"
+            className="w-full border-green-200 text-green-700 hover:bg-green-50"
+          >
+            <Filter className="w-4 h-4 mr-2" />
+            Filters & Search
+          </Button>
+        </div>
+
         {/* Filters */}
-        <Card className="mb-8 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <div className="flex flex-col lg:flex-row gap-6 items-center">
+        <Card className={`mb-6 sm:mb-8 shadow-xl border-0 bg-white/80 backdrop-blur-sm ${filtersOpen || 'hidden sm:block'}`}>
+          <CardContent className="p-4 sm:p-6">
+            <div className="space-y-4 sm:space-y-0 sm:flex sm:gap-6 sm:items-center">
+              {/* Search */}
               <div className="flex-1 relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
                 <Input
                   placeholder="Search products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 h-12 border-green-200 focus:border-green-500 rounded-full"
+                  className="pl-10 sm:pl-12 h-10 sm:h-12 border-green-200 focus:border-green-500 rounded-full text-sm sm:text-base"
                 />
               </div>
 
-              <div className="flex gap-4 items-center">
+              {/* Category Filter */}
+              <div className="w-full sm:w-48">
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="w-48 h-12 border-green-200 focus:border-green-500 rounded-full">
-                    <Filter className="w-4 h-4 mr-2" />
-                    <SelectValue placeholder="Filter by category" />
+                  <SelectTrigger className="h-10 sm:h-12 border-green-200 focus:border-green-500 rounded-full text-sm sm:text-base">
+                    <Filter className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+                    <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="All">All Categories</SelectItem>
@@ -208,9 +266,12 @@ export default function ProductsPage() {
                     <SelectItem value="Bathing Powders">Bathing Powders</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
 
+              {/* Sort */}
+              <div className="w-full sm:w-48">
                 <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-48 h-12 border-green-200 focus:border-green-500 rounded-full">
+                  <SelectTrigger className="h-10 sm:h-12 border-green-200 focus:border-green-500 rounded-full text-sm sm:text-base">
                     <SelectValue placeholder="Sort by" />
                   </SelectTrigger>
                   <SelectContent>
@@ -220,25 +281,26 @@ export default function ProductsPage() {
                     <SelectItem value="rating">Highest Rated</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
 
-                <div className="flex border border-green-200 rounded-full p-1">
-                  <Button
-                    variant={viewMode === "grid" ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setViewMode("grid")}
-                    className={`rounded-full ${viewMode === "grid" ? "gradient-green text-white" : "text-green-600"}`}
-                  >
-                    <Grid className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === "list" ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setViewMode("list")}
-                    className={`rounded-full ${viewMode === "list" ? "gradient-green text-white" : "text-green-600"}`}
-                  >
-                    <List className="w-4 h-4" />
-                  </Button>
-                </div>
+              {/* View Mode - Desktop Only */}
+              <div className="hidden sm:flex border border-green-200 rounded-full p-1">
+                <Button
+                  variant={viewMode === "grid" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setViewMode("grid")}
+                  className={`rounded-full ${viewMode === "grid" ? "gradient-green text-white" : "text-green-600"}`}
+                >
+                  <Grid className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant={viewMode === "list" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setViewMode("list")}
+                  className={`rounded-full ${viewMode === "list" ? "gradient-green text-white" : "text-green-600"}`}
+                >
+                  <List className="w-4 h-4" />
+                </Button>
               </div>
             </div>
           </CardContent>
@@ -246,7 +308,11 @@ export default function ProductsPage() {
 
         {/* Products Grid */}
         <div
-          className={`grid gap-8 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"}`}
+          className={`grid gap-4 sm:gap-6 lg:gap-8 ${
+            viewMode === "grid" 
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
+              : "grid-cols-1"
+          }`}
         >
           {filteredProducts.map((product) => (
             <Card
@@ -258,50 +324,50 @@ export default function ProductsPage() {
                   <img
                     src={product.image || "/placeholder.svg"}
                     alt={product.name}
-                    className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-48 sm:h-64 object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <Badge className="absolute top-4 right-4 gradient-green text-white border-0 shadow-lg">
+                  <Badge className="absolute top-2 sm:top-4 right-2 sm:right-4 gradient-green text-white border-0 shadow-lg text-xs sm:text-sm">
                     {product.category}
                   </Badge>
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm font-semibold">{product.rating}</span>
+                  <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-white/90 backdrop-blur-sm rounded-full px-2 sm:px-3 py-1 flex items-center gap-1">
+                    <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400" />
+                    <span className="text-xs sm:text-sm font-semibold">{product.rating}</span>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-4">
+              <CardContent className="p-4 sm:p-6">
+                <div className="space-y-3 sm:space-y-4">
                   <div>
-                    <CardTitle className="text-xl font-bold text-gray-800 mb-2">{product.name}</CardTitle>
-                    <div className="flex items-center gap-2 mb-3">
+                    <CardTitle className="text-lg sm:text-xl font-bold text-gray-800 mb-2 line-clamp-2">{product.name}</CardTitle>
+                    <div className="flex items-center gap-2 mb-2 sm:mb-3">
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star
                             key={star}
-                            className={`w-4 h-4 ${star <= Math.floor(product.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
+                            className={`w-3 h-3 sm:w-4 sm:h-4 ${star <= Math.floor(product.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
                           />
                         ))}
                       </div>
-                      <span className="text-sm text-gray-600">({product.reviews} reviews)</span>
+                      <span className="text-xs sm:text-sm text-gray-600">({product.reviews})</span>
                     </div>
-                    <p className="text-3xl font-bold text-gradient">₹{product.price}/kg</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-gradient">₹{product.price}/kg</p>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <label className="text-sm font-semibold text-gray-700">Qty (kg):</label>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <label className="text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">Qty (kg):</label>
                     <Input
                       type="number"
                       min="1"
                       value={quantities[product.name] || 1}
                       onChange={(e) => handleQuantityChange(product.name, Number.parseInt(e.target.value) || 1)}
-                      className="w-20 h-10 border-green-200 focus:border-green-500 rounded-lg"
+                      className="w-16 sm:w-20 h-8 sm:h-10 border-green-200 focus:border-green-500 rounded-lg text-sm"
                     />
                   </div>
 
                   <Button
                     onClick={() => handleAddToCart(product)}
-                    className={`w-full h-12 font-semibold rounded-full transition-all duration-300 ${
+                    className={`w-full h-10 sm:h-12 font-semibold rounded-full transition-all duration-300 text-sm sm:text-base ${
                       addedToCart[product.name]
                         ? "bg-green-600 hover:bg-green-700 text-white"
                         : "gradient-green text-white hover:shadow-lg"
@@ -310,12 +376,12 @@ export default function ProductsPage() {
                   >
                     {addedToCart[product.name] ? (
                       <>
-                        <Check className="w-5 h-5 mr-2" />
+                        <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                         Added to Cart
                       </>
                     ) : (
                       <>
-                        <ShoppingCart className="w-5 h-5 mr-2" />
+                        <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                         Add to Cart
                       </>
                     )}
@@ -327,29 +393,29 @@ export default function ProductsPage() {
         </div>
 
         {filteredProducts.length === 0 && (
-          <div className="text-center py-20">
-            <div className="w-24 h-24 mx-auto mb-6 gradient-green rounded-full flex items-center justify-center">
-              <Search className="w-12 h-12 text-white" />
+          <div className="text-center py-16 sm:py-20">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 sm:mb-6 gradient-green rounded-full flex items-center justify-center">
+              <Search className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">No products found</h3>
-            <p className="text-gray-600 text-lg">Try adjusting your search or filter criteria.</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">No products found</h3>
+            <p className="text-gray-600 text-base sm:text-lg px-4">Try adjusting your search or filter criteria.</p>
           </div>
         )}
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16 mt-20">
+      <footer className="bg-gray-900 text-white py-12 sm:py-16 mt-16 sm:mt-20">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="w-16 h-16 gradient-green rounded-full flex items-center justify-center shadow-lg">
-              <Leaf className="text-white w-8 h-8" />
+          <div className="flex items-center justify-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 gradient-green rounded-full flex items-center justify-center shadow-lg">
+              <Leaf className="text-white w-6 h-6 sm:w-8 sm:h-8" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold">Sri Srinivasa Flour Mills</h3>
-              <p className="text-green-400 font-medium">80 Years of Legacy</p>
+              <h3 className="text-lg sm:text-2xl font-bold">Sri Srinivasa Flour Mills</h3>
+              <p className="text-green-400 font-medium text-sm sm:text-base">80 Years of Legacy</p>
             </div>
           </div>
-          <p className="text-gray-400">© 2024 Sri Srinivasa Flour Mills. All rights reserved.</p>
+          <p className="text-gray-400 text-sm sm:text-base">© 2024 Sri Srinivasa Flour Mills. All rights reserved.</p>
         </div>
       </footer>
     </div>
