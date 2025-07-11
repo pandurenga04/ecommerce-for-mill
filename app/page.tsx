@@ -377,14 +377,14 @@ export default function HomePage() {
                   <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-600 rounded-full flex items-center justify-center">
                     <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
-                  <span className="text-gray-300 text-sm sm:text-base">info@srisrinivasaflour.com</span>
+                  <span className="text-gray-300 text-sm sm:text-base">kannansuthan@gmail.com</span>
                 </div>
                 <div className="flex items-start justify-center sm:justify-start gap-3">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-600 rounded-full flex items-center justify-center mt-1">
                     <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
                   <span className="text-gray-300 text-sm sm:text-base text-center sm:text-left">
-                    Traditional Flour Mills
+                    Sri Srinivasa Flour Mills ,Srivilliputhur
                     <br />
                     Tamil Nadu, India
                   </span>
