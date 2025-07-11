@@ -145,8 +145,15 @@
 }
 
 .card-hover:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .card-hover:hover {
+    transform: translateY(-2px) scale(1.005);
+    box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.15);
+  }
 }
 
 .text-gradient {
@@ -154,4 +161,21 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 640px) {
+  .mobile-padding {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .mobile-text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  
+  .mobile-compact {
+    padding: 0.75rem;
+  }
 }
