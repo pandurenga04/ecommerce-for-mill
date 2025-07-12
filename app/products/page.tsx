@@ -12,88 +12,96 @@ import { ShoppingCart, Search, Check, Leaf, Star, Filter, Grid, List, Menu, X } 
 
 const products = {
   "Masala Powders": [
-    { name: "Sambar Powder", price: 400, image: "https://moonrice.net/wp-content/uploads/2024/04/SambarPodi-4.jpg", rating: 4.8, reviews: 124 },
-    { name: "Rasam Powder", price: 400, image: "https://srivarahafoods.com/cdn/shop/files/SriVarahaFoods-Pepper-Cumin-Rasam-Powder-Podi-Milagu-Jeera-Rasam-Podi.webp?v=1750331977", rating: 4.9, reviews: 98 },
-    { name: "Idli Powder", price: 300, image: "https://mylaporeganapathys.com/wp-content/uploads/2025/05/yellu-idly-podi.jpg", rating: 4.7, reviews: 156 },
-    { name: "Sesame Powder", price: 400, image: "https://www.yummytummyaarthi.com/wp-content/uploads/2017/01/1-20.jpg", rating: 4.6, reviews: 87 },
-    { name: "Vathal Powder", price: 400, image: "https://www.yummytummyaarthi.com/wp-content/uploads/2014/07/2.-11.png", rating: 4.8, reviews: 92 },
-    { name: "Coriander Powder", price: 300, image: "https://img500.exportersindia.com/product_images/bc-500/dir_168/5034701/coriander-seeds-powder-1498201560-3083197.jpeg", rating: 4.9, reviews: 203 },
-    { name: "Turmeric Powder", price: 450, image: "https://domf5oio6qrcr.cloudfront.net/medialibrary/15065/conversions/fa246ce0-054b-4892-bf30-5eb43cd938aa-thumb.jpg", rating: 4.8, reviews: 167 },
+    { name: "Sambar Powder", pricePerKg: 400, image: "https://moonrice.net/wp-content/uploads/2024/04/SambarPodi-4.jpg", rating: 4.8, reviews: 124 },
+    { name: "Rasam Powder", pricePerKg: 400, image: "https://srivarahafoods.com/cdn/shop/files/SriVarahaFoods-Pepper-Cumin-Rasam-Powder-Podi-Milagu-Jeera-Rasam-Podi.webp?v=1750331977", rating: 4.9, reviews: 98 },
+    { name: "Idli Powder", pricePerKg: 300, image: "https://mylaporeganapathys.com/wp-content/uploads/2025/05/yellu-idly-podi.jpg", rating: 4.7, reviews: 156 },
+    { name: "Sesame Powder", pricePerKg: 400, image: "https://www.yummytummyaarthi.com/wp-content/uploads/2017/01/1-20.jpg", rating: 4.6, reviews: 87 },
+    { name: "Vathal Powder", pricePerKg: 400, image: "https://www.yummytummyaarthi.com/wp-content/uploads/2014/07/2.-11.png", rating: 4.8, reviews: 92 },
+    { name: "Coriander Powder", pricePerKg: 300, image: "https://img500.exportersindia.com/product_images/bc-500/dir_168/5034701/coriander-seeds-powder-1498201560-3083197.jpeg", rating: 4.9, reviews: 203 },
+    { name: "Turmeric Powder", pricePerKg: 450, image: "https://domf5oio6qrcr.cloudfront.net/medialibrary/15065/conversions/fa246ce0-054b-4892-bf30-5eb43cd938aa-thumb.jpg", rating: 4.8, reviews: 167 },
     {
       name: "Curry Leaves Powder",
-      price: 400,
+      pricePerKg: 400,
       image: "https://www.indianveggiedelight.com/wp-content/uploads/2021/07/curryleaves-chutney-powder-featured.jpg",
       rating: 4.7,
       reviews: 78,
     },
     {
       name: "Drumstick Leaves Powder",
-      price: 400,
+      pricePerKg: 400,
       image: "https://5.imimg.com/data5/OC/YS/MY-28365108/natural-drumstick-leaves-powder-500x500.jpg",
       rating: 4.6,
       reviews: 65,
     },
     {
       name: "Mint Leaves Powder",
-      price: 300,
+      pricePerKg: 300,
       image: "https://5.imimg.com/data5/QX/UT/OK/SELLER-94661056/mint-leaves-powder-500x500.jpg",
       rating: 4.5,
       reviews: 54,
     },
-    { name: "Dal Powder", price: 300, image: "https://www.vishalam.com/cdn/shop/products/paruppu-podi-dal-rice-mix-329743.jpg?v=1690005069", rating: 4.7, reviews: 89 },
+    { name: "Dal Powder", pricePerKg: 300, image: "https://www.vishalam.com/cdn/shop/products/paruppu-podi-dal-rice-mix-329743.jpg?v=1690005069", rating: 4.7, reviews: 89 },
   ],
   "Flours & Mixes": [
     {
       name: "Health Mix Powder",
-      price: 300,
+      pricePerKg: 300,
       image: "https://sweetkaramcoffee.in/cdn/shop/articles/millets-health-mix-kanji-maavu-250g-564369_c4a720ba-edde-4297-b7f0-893b9b4f206d.jpg?v=1745047720",
       rating: 4.9,
       reviews: 234,
     },
-    { name: "Wheat Flour", price: 80, image: "https://farmfit.in/wp-content/uploads/2024/03/Firefly-wheat-flour-in-wooden-bowl-white-background-with-grains-17849.jpg", rating: 4.8, reviews: 456 },
+    { name: "Wheat Flour", pricePerKg: 80, image: "https://farmfit.in/wp-content/uploads/2024/03/Firefly-wheat-flour-in-wooden-bowl-white-background-with-grains-17849.jpg", rating: 4.8, reviews: 456 },
     {
       name: "Pearl Millet Flour (Kambu)",
-      price: 65,
+      pricePerKg: 65,
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkmXdHLjEqcMsqFNtjPmy7atRZ56xoMU0oAw&s",
       rating: 4.7,
       reviews: 123,
     },
     {
       name: "Ragi Flour (Keppai)",
-      price: 70,
+      pricePerKg: 70,
       image: "https://www.jiomart.com/images/product/original/rvvziovn9o/farmbean-ragi-flour-1kg-ragi-mavu-keppai-mavu-ragi-atta-finger-millet-flour-ragulu-ragi-nachani-organic-flour-rich-in-dietary-fibers-healthy-food-gluten-free-atta-no-preservatives-no-trans-fats-high-protein-100-more-fibre-product-images-orvvziovn9o-p603878066-5-202308151317.jpg?im=Resize=(420,420)",
       rating: 4.8,
       reviews: 189,
     },
-    { name: "Rice Flour", price: 60, image: "https://m.media-amazon.com/images/I/51GswgOU9ZL._UF1000,1000_QL80_.jpg", rating: 4.6, reviews: 267 },
-    { name: "Idiyappam Flour", price: 70, image: "https://mirchi.com/os/cdn/content/images/idiyappam%20flour%20dharshana%20homemade%20food_medium_0514144.webp", rating: 4.7, reviews: 145 },
-    { name: "Rice Upma Mix", price: 350, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkjj61VedTyCHq4YIvDQwLK6QUJP8B5optog&s", rating: 4.5, reviews: 76 },
-    { name: "Rava Dosa Mix", price: 300, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSWfCpC9CGGhXyDcRfC1CFdkBIHa41XURtnw&s", rating: 4.6, reviews: 98 },
+    { name: "Rice Flour", pricePerKg: 60, image: "https://m.media-amazon.com/images/I/51GswgOU9ZL._UF1000,1000_QL80_.jpg", rating: 4.6, reviews: 267 },
+    { name: "Idiyappam Flour", pricePerKg: 70, image: "https://mirchi.com/os/cdn/content/images/idiyappam%20flour%20dharshana%20homemade%20food_medium_0514144.webp", rating: 4.7, reviews: 145 },
+    { name: "Rice Upma Mix", pricePerKg: 350, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:GetQkkjj61VedTyCHq4YIvDQwLK6QUJP8B5optog&s", rating: 4.5, reviews: 76 },
+    { name: "Rava Dosa Mix", pricePerKg: 300, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:GetQSSWfCpC9CGGhXyDcRfC1CFdkBIHa41XURtnw&s", rating: 4.6, reviews: 98 },
   ],
   "Bathing Powders": [
     {
       name: "Herbal Bath Powder",
-      price: 400,
+      pricePerKg: 400,
       image: "https://5.imimg.com/data5/SELLER/Default/2023/2/HR/KM/MD/9313101/thuvalai-powder-herbal-bath-powder-for-adults.jpg",
       rating: 4.8,
       reviews: 156,
     },
     {
       name: "Kasturi Turmeric Powder",
-      price: 400,
+      pricePerKg: 400,
       image: "https://static.wixstatic.com/media/86d471_8dfce175354545feb1c93adf3010618b~mv2.png/v1/fill/w_980,h_607,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/86d471_8dfce175354545feb1c93adf3010618b~mv2.png",
       rating: 4.9,
       reviews: 203,
     },
-    { name: "Shikakai Powder", price: 400, image: "https://shreenaenterprise.com/cdn/shop/files/Shikakai-Powder.jpg?v=1725448820", rating: 4.7, reviews: 134 },
-    { name: "Turmeric Powder", price: 300, image: "https://domf5oio6qrcr.cloudfront.net/medialibrary/15065/conversions/fa246ce0-054b-4892-bf30-5eb43cd938aa-thumb.jpg", rating: 4.6, reviews: 187 },
+    { name: "Shikakai Powder", pricePerKg: 400, image: "https://shreenaenterprise.com/cdn/shop/files/Shikakai-Powder.jpg?v=1725448820", rating: 4.7, reviews: 134 },
+    { name: "Turmeric Powder", pricePerKg: 300, image: "https://domf5oio6qrcr.cloudfront.net/medialibrary/15065/conversions/fa246ce0-054b-4892-bf30-5eb43cd938aa-thumb.jpg", rating: 4.6, reviews: 187 },
   ],
 }
+
+const variants = [
+  { value: "0.1", label: "100g", multiplier: 0.1 },
+  { value: "0.25", label: "250g", multiplier: 0.25 },
+  { value: "0.5", label: "500g", multiplier: 0.5 },
+  { value: "1", label: "1kg", multiplier: 1 },
+]
 
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [searchTerm, setSearchTerm] = useState("")
   const [quantities, setQuantities] = useState<Record<string, number>>({})
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({})
   const [addedToCart, setAddedToCart] = useState<Record<string, boolean>>({})
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [sortBy, setSortBy] = useState("name")
@@ -114,9 +122,9 @@ export default function ProductsPage() {
     .sort((a, b) => {
       switch (sortBy) {
         case "price-low":
-          return a.price - b.price
+          return a.pricePerKg - b.pricePerKg
         case "price-high":
-          return b.price - a.price
+          return b.pricePerKg - a.pricePerKg
         case "rating":
           return b.rating - a.rating
         default:
@@ -128,11 +136,19 @@ export default function ProductsPage() {
     setQuantities((prev) => ({ ...prev, [productName]: quantity }))
   }
 
+  const handleVariantChange = (productName: string, variant: string) => {
+    setSelectedVariants((prev) => ({ ...prev, [productName]: variant }))
+  }
+
   const handleAddToCart = (product: any) => {
     const quantity = quantities[product.name] || 1
-    addToCart({ ...product, quantity })
-    setQuantities((prev) => ({ ...prev, [product.name]: 1 }))
+    const variant = selectedVariants[product.name] || "1"
+    const variantData = variants.find((v) => v.value === variant)
+    const price = product.pricePerKg * (variantData?.multiplier || 1)
+    const weight = variantData?.label || "1kg"
 
+    addToCart({ ...product, quantity, price, weight })
+    setQuantities((prev) => ({ ...prev, [product.name]: 1 }))
     setAddedToCart((prev) => ({ ...prev, [product.name]: true }))
     setTimeout(() => {
       setAddedToCart((prev) => ({ ...prev, [product.name]: false }))
@@ -314,82 +330,107 @@ export default function ProductsPage() {
               : "grid-cols-1"
           }`}
         >
-          {filteredProducts.map((product) => (
-            <Card
-              key={product.name}
-              className="card-hover border-0 shadow-xl bg-white/90 backdrop-blur-sm overflow-hidden group"
-            >
-              <CardHeader className="p-0 relative">
-                <div className="relative overflow-hidden">
-                  <img
-                    src={product.image || "/placeholder.svg"}
-                    alt={product.name}
-                    className="w-full h-48 sm:h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <Badge className="absolute top-2 sm:top-4 right-2 sm:right-4 gradient-green text-white border-0 shadow-lg text-xs sm:text-sm">
-                    {product.category}
-                  </Badge>
-                  <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-white/90 backdrop-blur-sm rounded-full px-2 sm:px-3 py-1 flex items-center gap-1">
-                    <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-xs sm:text-sm font-semibold">{product.rating}</span>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-4 sm:p-6">
-                <div className="space-y-3 sm:space-y-4">
-                  <div>
-                    <CardTitle className="text-lg sm:text-xl font-bold text-gray-800 mb-2 line-clamp-2">{product.name}</CardTitle>
-                    <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                      <div className="flex">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`w-3 h-3 sm:w-4 sm:h-4 ${star <= Math.floor(product.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-xs sm:text-sm text-gray-600">({product.reviews})</span>
-                    </div>
-                    <p className="text-2xl sm:text-3xl font-bold text-gradient">₹{product.price}/kg</p>
-                  </div>
-
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <label className="text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">Qty (kg):</label>
-                    <Input
-                      type="number"
-                      min="1"
-                      value={quantities[product.name] || 1}
-                      onChange={(e) => handleQuantityChange(product.name, Number.parseInt(e.target.value) || 1)}
-                      className="w-16 sm:w-20 h-8 sm:h-10 border-green-200 focus:border-green-500 rounded-lg text-sm"
+          {filteredProducts.map((product) => {
+            const selectedVariant = selectedVariants[product.name] || "1"
+            const variantData = variants.find((v) => v.value === selectedVariant)
+            const currentPrice = product.pricePerKg * (variantData?.multiplier || 1)
+            
+            return (
+              <Card
+                key={product.name}
+                className="card-hover border-0 shadow-xl bg-white/90 backdrop-blur-sm overflow-hidden group"
+              >
+                <CardHeader className="p-0 relative">
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={product.image || "/placeholder.svg"}
+                      alt={product.name}
+                      className="w-full h-48 sm:h-64 object-cover transition-transform duration-500 group-hover:scale-110"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <Badge className="absolute top-2 sm:top-4 right-2 sm:right-4 gradient-green text-white border-0 shadow-lg text-xs sm:text-sm">
+                      {product.category}
+                    </Badge>
+                    <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-white/90 backdrop-blur-sm rounded-full px-2 sm:px-3 py-1 flex items-center gap-1">
+                      <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400" />
+                      <span className="text-xs sm:text-sm font-semibold">{product.rating}</span>
+                    </div>
                   </div>
+                </CardHeader>
+                <CardContent className="p-4 sm:p-6">
+                  <div className="space-y-3 sm:space-y-4">
+                    <div>
+                      <CardTitle className="text-lg sm:text-xl font-bold text-gray-800 mb-2 line-clamp-2">{product.name}</CardTitle>
+                      <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                        <div className="flex">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`w-3 h-3 sm:w-4 sm:h-4 ${star <= Math.floor(product.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-xs sm:text-sm text-gray-600">({product.reviews})</span>
+                      </div>
+                      <p className="text-2xl sm:text-3xl font-bold text-gradient">₹{currentPrice.toFixed(2)}/{variantData?.label || "1kg"}</p>
+                    </div>
 
-                  <Button
-                    onClick={() => handleAddToCart(product)}
-                    className={`w-full h-10 sm:h-12 font-semibold rounded-full transition-all duration-300 text-sm sm:text-base ${
-                      addedToCart[product.name]
-                        ? "bg-green-600 hover:bg-green-700 text-white"
-                        : "gradient-green text-white hover:shadow-lg"
-                    }`}
-                    disabled={addedToCart[product.name]}
-                  >
-                    {addedToCart[product.name] ? (
-                      <>
-                        <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                        Added to Cart
-                      </>
-                    ) : (
-                      <>
-                        <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                        Add to Cart
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <label className="text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">Weight:</label>
+                      <Select
+                        value={selectedVariant}
+                        onValueChange={(value) => handleVariantChange(product.name, value)}
+                      >
+                        <SelectTrigger className="w-24 sm:w-28 h-8 sm:h-10 border-green-200 focus:border-green-500 rounded-lg text-sm">
+                          <SelectValue placeholder="Select weight" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {variants.map((variant) => (
+                            <SelectItem key={variant.value} value={variant.value}>
+                              {variant.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <label className="text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">Qty:</label>
+                      <Input
+                        type="number"
+                        min="1"
+                        value={quantities[product.name] || 1}
+                        onChange={(e) => handleQuantityChange(product.name, Number.parseInt(e.target.value) || 1)}
+                        className="w-16 sm:w-20 h-8 sm:h-10 border-green-200 focus:border-green-500 rounded-lg text-sm"
+                      />
+                    </div>
+
+                    <Button
+                      onClick={() => handleAddToCart(product)}
+                      className={`w-full h-10 sm:h-12 font-semibold rounded-full transition-all duration-300 text-sm sm:text-base ${
+                        addedToCart[product.name]
+                          ? "bg-green-600 hover:bg-green-700 text-white"
+                          : "gradient-green text-white hover:shadow-lg"
+                      }`}
+                      disabled={addedToCart[product.name]}
+                    >
+                      {addedToCart[product.name] ? (
+                        <>
+                          <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                          Added to Cart
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                          Add to Cart
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )
+          })}
         </div>
 
         {filteredProducts.length === 0 && (
