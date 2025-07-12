@@ -10,87 +10,61 @@ import { useCart } from "@/contexts/cart-context"
 import Link from "next/link"
 import { ShoppingCart, Search, Check, Leaf, Star, Filter, Grid, List, Menu, X } from 'lucide-react'
 
-const products = {
+// Define interfaces for type safety
+interface Product {
+  name: string
+  pricePerKg: number
+  image: string
+  rating: number
+  reviews: number
+  category: string
+}
+
+interface Variant {
+  value: string
+  label: string
+  multiplier: number
+}
+
+interface CartItem extends Product {
+  quantity: number
+  price: number
+  weight: string
+}
+
+const products: Record<string, Product[]> = {
   "Masala Powders": [
-    { name: "Sambar Powder", pricePerKg: 400, image: "https://moonrice.net/wp-content/uploads/2024/04/SambarPodi-4.jpg", rating: 4.8, reviews: 124 },
-    { name: "Rasam Powder", pricePerKg: 400, image: "https://srivarahafoods.com/cdn/shop/files/SriVarahaFoods-Pepper-Cumin-Rasam-Powder-Podi-Milagu-Jeera-Rasam-Podi.webp?v=1750331977", rating: 4.9, reviews: 98 },
-    { name: "Idli Powder", pricePerKg: 300, image: "https://mylaporeganapathys.com/wp-content/uploads/2025/05/yellu-idly-podi.jpg", rating: 4.7, reviews: 156 },
-    { name: "Sesame Powder", pricePerKg: 400, image: "https://www.yummytummyaarthi.com/wp-content/uploads/2017/01/1-20.jpg", rating: 4.6, reviews: 87 },
-    { name: "Vathal Powder", pricePerKg: 400, image: "https://www.yummytummyaarthi.com/wp-content/uploads/2014/07/2.-11.png", rating: 4.8, reviews: 92 },
-    { name: "Coriander Powder", pricePerKg: 300, image: "https://img500.exportersindia.com/product_images/bc-500/dir_168/5034701/coriander-seeds-powder-1498201560-3083197.jpeg", rating: 4.9, reviews: 203 },
-    { name: "Turmeric Powder", pricePerKg: 450, image: "https://domf5oio6qrcr.cloudfront.net/medialibrary/15065/conversions/fa246ce0-054b-4892-bf30-5eb43cd938aa-thumb.jpg", rating: 4.8, reviews: 167 },
-    {
-      name: "Curry Leaves Powder",
-      pricePerKg: 400,
-      image: "https://www.indianveggiedelight.com/wp-content/uploads/2021/07/curryleaves-chutney-powder-featured.jpg",
-      rating: 4.7,
-      reviews: 78,
-    },
-    {
-      name: "Drumstick Leaves Powder",
-      pricePerKg: 400,
-      image: "https://5.imimg.com/data5/OC/YS/MY-28365108/natural-drumstick-leaves-powder-500x500.jpg",
-      rating: 4.6,
-      reviews: 65,
-    },
-    {
-      name: "Mint Leaves Powder",
-      pricePerKg: 300,
-      image: "https://5.imimg.com/data5/QX/UT/OK/SELLER-94661056/mint-leaves-powder-500x500.jpg",
-      rating: 4.5,
-      reviews: 54,
-    },
-    { name: "Dal Powder", pricePerKg: 300, image: "https://www.vishalam.com/cdn/shop/products/paruppu-podi-dal-rice-mix-329743.jpg?v=1690005069", rating: 4.7, reviews: 89 },
+    { name: "Sambar Powder", pricePerKg: 400, image: "https://moonrice.net/wp-content/uploads/2024/04/SambarPodi-4.jpg", rating: 4.8, reviews: 124, category: "Masala Powders" },
+    { name: "Rasam Powder", pricePerKg: 400, image: "https://srivarahafoods.com/cdn/shop/files/SriVarahaFoods-Pepper-Cumin-Rasam-Powder-Podi-Milagu-Jeera-Rasam-Podi.webp?v=1750331977", rating: 4.9, reviews: 98, category: "Masala Powders" },
+    { name: "Idli Powder", pricePerKg: 300, image: "https://mylaporeganapathys.com/wp-content/uploads/2025/05/yellu-idly-podi.jpg", rating: 4.7, reviews: 156, category: "Masala Powders" },
+    { name: "Sesame Powder", pricePerKg: 400, image: "https://www.yummytummyaarthi.com/wp-content/uploads/2017/01/1-20.jpg", rating: 4.6, reviews: 87, category: "Masala Powders" },
+    { name: "Vathal Powder", pricePerKg: 400, image: "https://www.yummytummyaarthi.com/wp-content/uploads/2014/07/2.-11.png", rating: 4.8, reviews: 92, category: "Masala Powders" },
+    { name: "Coriander Powder", pricePerKg: 300, image: "https://img500.exportersindia.com/product_images/bc-500/dir_168/5034701/coriander-seeds-powder-1498201560-3083197.jpeg", rating: 4.9, reviews: 203, category: "Masala Powders" },
+    { name: "Turmeric Powder", pricePerKg: 450, image: "https://domf5oio6qrcr.cloudfront.net/medialibrary/15065/conversions/fa246ce0-054b-4892-bf30-5eb43cd938aa-thumb.jpg", rating: 4.8, reviews: 167, category: "Masala Powders" },
+    { name: "Curry Leaves Powder", pricePerKg: 400, image: "https://www.indianveggiedelight.com/wp-content/uploads/2021/07/curryleaves-chutney-powder-featured.jpg", rating: 4.7, reviews: 78, category: "Masala Powders" },
+    { name: "Drumstick Leaves Powder", pricePerKg: 400, image: "https://5.imimg.com/data5/OC/YS/MY-28365108/natural-drumstick-leaves-powder-500x500.jpg", rating: 4.6, reviews: 65, category: "Masala Powders" },
+    { name: "Mint Leaves Powder", pricePerKg: 350, image: "https://5.imimg.com/data5/QX/UT/OK/SELLER-94661056/mint-leaves-powder-500x500.jpg", rating: 4.5, reviews: 54, category: "Masala Powders" },
+    { name: "Dal Powder", pricePerKg: 300, image: "https://www.vishalam.com/cdn/shop/products/paruppu-podi-dal-rice-mix-329743.jpg?v=1690005069", rating: 4.7, reviews: 89, category: "Masala Powders" },
   ],
   "Flours & Mixes": [
-    {
-      name: "Health Mix Powder",
-      pricePerKg: 300,
-      image: "https://sweetkaramcoffee.in/cdn/shop/articles/millets-health-mix-kanji-maavu-250g-564369_c4a720ba-edde-4297-b7f0-893b9b4f206d.jpg?v=1745047720",
-      rating: 4.9,
-      reviews: 234,
-    },
-    { name: "Wheat Flour", pricePerKg: 80, image: "https://farmfit.in/wp-content/uploads/2024/03/Firefly-wheat-flour-in-wooden-bowl-white-background-with-grains-17849.jpg", rating: 4.8, reviews: 456 },
-    {
-      name: "Pearl Millet Flour (Kambu)",
-      pricePerKg: 65,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkmXdHLjEqcMsqFNtjPmy7atRZ56xoMU0oAw&s",
-      rating: 4.7,
-      reviews: 123,
-    },
-    {
-      name: "Ragi Flour (Keppai)",
-      pricePerKg: 70,
-      image: "https://www.jiomart.com/images/product/original/rvvziovn9o/farmbean-ragi-flour-1kg-ragi-mavu-keppai-mavu-ragi-atta-finger-millet-flour-ragulu-ragi-nachani-organic-flour-rich-in-dietary-fibers-healthy-food-gluten-free-atta-no-preservatives-no-trans-fats-high-protein-100-more-fibre-product-images-orvvziovn9o-p603878066-5-202308151317.jpg?im=Resize=(420,420)",
-      rating: 4.8,
-      reviews: 189,
-    },
-    { name: "Rice Flour", pricePerKg: 60, image: "https://m.media-amazon.com/images/I/51GswgOU9ZL._UF1000,1000_QL80_.jpg", rating: 4.6, reviews: 267 },
-    { name: "Idiyappam Flour", pricePerKg: 70, image: "https://mirchi.com/os/cdn/content/images/idiyappam%20flour%20dharshana%20homemade%20food_medium_0514144.webp", rating: 4.7, reviews: 145 },
-    { name: "Rice Upma Mix", pricePerKg: 350, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:GetQkkjj61VedTyCHq4YIvDQwLK6QUJP8B5optog&s", rating: 4.5, reviews: 76 },
-    { name: "Rava Dosa Mix", pricePerKg: 300, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:GetQSSWfCpC9CGGhXyDcRfC1CFdkBIHa41XURtnw&s", rating: 4.6, reviews: 98 },
+    { name: "Health Mix Powder", pricePerKg: 300, image: "https://sweetkaramcoffee.in/cdn/shop/articles/millets-health-mix-kanji-maavu-250g-564369_c4a720ba-edde-4297-b7f0-893b9b4f206d.jpg?v=1745047720", rating: 4.9, reviews: 234, category: "Flours & Mixes" },
+    { name: "Wheat Flour", pricePerKg: 70, image: "https://farmfit.in/wp-content/uploads/2024/03/Firefly-wheat-flour-in-wooden-bowl-white-background-with-grains-17849.jpg", rating: 4.8, reviews: 456, category: "Flours & Mixes" },
+    { name: "Pearl Millet Flour (Kambu)", pricePerKg: 65, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkmXdHLjEqcMsqFNtjPmy7atRZ56xoMU0oAw&s", rating: 4.7, reviews: 123, category: "Flours & Mixes" },
+    { name: "Ragi Flour (Keppai)", pricePerKg: 80, image: "https://www.jiomart.com/images/product/original/rvvziovn9o/farmbean-ragi-flour-1kg-ragi-mavu-keppai-mavu-ragi-atta-finger-millet-flour-ragulu-ragi-nachani-organic-flour-rich-in-dietary-fibers-healthy-food-gluten-free-atta-no-preservatives-no-trans-fats-high-protein-100-more-fibre-product-images-orvvziovn9o-p603878066-5-202308151317.jpg?im=Resize=(420,420)", rating: 4.8, reviews: 189, category: "Flours & Mixes" },
+    { name: "Rice Flour", pricePerKg: 60, image: "https://m.media-amazon.com/images/I/51GswgOU9ZL._UF1000,1000_QL80_.jpg", rating: 4.6, reviews: 267, category: "Flours & Mixes" },
+    { name: "Idiyappam Flour", pricePerKg: 70, image: "https://mirchi.com/os/cdn/content/images/idiyappam%20flour%20dharshana%20homemade%20food_medium_0514144.webp", rating: 4.7, reviews: 145, category: "Flours & Mixes" },
+    { name: "Rice Upma Mix", pricePerKg: 350, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:GetQkkjj61VedTyCHq4YIvDQwLK6QUJP8B5optog&s", rating: 4.5, reviews: 76, category: "Flours & Mixes" },
+    { name: "Rava Dosa Mix", pricePerKg: 300, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:GetQSSWfCpC9CGGhXyDcRfC1CFdkBIHa41XURtnw&s", rating: 4.6, reviews: 98, category: "Flours & Mixes" },
   ],
   "Bathing Powders": [
-    {
-      name: "Herbal Bath Powder",
-      pricePerKg: 400,
-      image: "https://5.imimg.com/data5/SELLER/Default/2023/2/HR/KM/MD/9313101/thuvalai-powder-herbal-bath-powder-for-adults.jpg",
-      rating: 4.8,
-      reviews: 156,
-    },
-    {
-      name: "Kasturi Turmeric Powder",
-      pricePerKg: 400,
-      image: "https://static.wixstatic.com/media/86d471_8dfce175354545feb1c93adf3010618b~mv2.png/v1/fill/w_980,h_607,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/86d471_8dfce175354545feb1c93adf3010618b~mv2.png",
-      rating: 4.9,
-      reviews: 203,
-    },
-    { name: "Shikakai Powder", pricePerKg: 400, image: "https://shreenaenterprise.com/cdn/shop/files/Shikakai-Powder.jpg?v=1725448820", rating: 4.7, reviews: 134 },
-    { name: "Turmeric Powder", pricePerKg: 300, image: "https://domf5oio6qrcr.cloudfront.net/medialibrary/15065/conversions/fa246ce0-054b-4892-bf30-5eb43cd938aa-thumb.jpg", rating: 4.6, reviews: 187 },
+    { name: "Herbal Bath(Sthnana) Powder", pricePerKg: 400, image: "https://5.imimg.com/data5/SELLER/Default/2023/2/HR/KM/MD/9313101/thuvalai-powder-herbal-bath-powder-for-adults.jpg", rating: 4.8, reviews: 156, category: "Bathing Powders" },
+    { name: "Kasturi Turmeric Powder", pricePerKg: 400, image: "https://static.wixstatic.com/media/86d471_8dfce175354545feb1c93adf3010618b~mv2.png/v1/fill/w_980,h_607,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/86d471_8dfce175354545feb1c93adf3010618b~mv2.png", rating: 4.9, reviews: 203, category: "Bathing Powders" },
+    { name: "Shikakai Powder", pricePerKg: 400, image: "https://shreenaenterprise.com/cdn/shop/files/Shikakai-Powder.jpg?v=1725448820", rating: 4.7, reviews: 134, category: "Bathing Powders" },
+    { name: "Bath Turmeric Powder", pricePerKg: 400, image: "https://www.aalayamselveer.com/wp-content/uploads/2020/10/Poosu-Manjal-Podi.png", rating: 4.6, reviews: 187, category: "Bathing Powders" },
   ],
 }
 
-const variants = [
+const variants: Variant[] = [
   { value: "0.1", label: "100g", multiplier: 0.1 },
   { value: "0.25", label: "250g", multiplier: 0.25 },
   { value: "0.5", label: "500g", multiplier: 0.5 },
@@ -98,18 +72,18 @@ const variants = [
 ]
 
 export default function ProductsPage() {
-  const [selectedCategory, setSelectedCategory] = useState("All")
-  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState<string>("All")
+  const [searchTerm, setSearchTerm] = useState<string>("")
   const [quantities, setQuantities] = useState<Record<string, number>>({})
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({})
   const [addedToCart, setAddedToCart] = useState<Record<string, boolean>>({})
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [sortBy, setSortBy] = useState("name")
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [filtersOpen, setFiltersOpen] = useState(false)
+  const [sortBy, setSortBy] = useState<string>("name")
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
+  const [filtersOpen, setFiltersOpen] = useState<boolean>(false)
   const { addToCart, cartItems } = useCart()
 
-  const allProducts = Object.entries(products).flatMap(([category, items]) =>
+  const allProducts: Product[] = Object.entries(products).flatMap(([category, items]) =>
     items.map((item) => ({ ...item, category })),
   )
 
@@ -132,30 +106,33 @@ export default function ProductsPage() {
       }
     })
 
-  const handleQuantityChange = (productName: string, quantity: number) => {
-    setQuantities((prev) => ({ ...prev, [productName]: quantity }))
+  const getProductKey = (product: Product): string => `${product.name}_${product.category}`
+
+  const handleQuantityChange = (product: Product, quantity: number) => {
+    setQuantities((prev) => ({ ...prev, [getProductKey(product)]: quantity }))
   }
 
-  const handleVariantChange = (productName: string, variant: string) => {
-    setSelectedVariants((prev) => ({ ...prev, [productName]: variant }))
+  const handleVariantChange = (product: Product, variant: string) => {
+    setSelectedVariants((prev) => ({ ...prev, [getProductKey(product)]: variant }))
   }
 
-  const handleAddToCart = (product: any) => {
-    const quantity = quantities[product.name] || 1
-    const variant = selectedVariants[product.name] || "1"
+  const handleAddToCart = (product: Product) => {
+    const productKey = getProductKey(product)
+    const quantity = quantities[productKey] || 1
+    const variant = selectedVariants[productKey] || "1"
     const variantData = variants.find((v) => v.value === variant)
     const price = product.pricePerKg * (variantData?.multiplier || 1)
     const weight = variantData?.label || "1kg"
 
     addToCart({ ...product, quantity, price, weight })
-    setQuantities((prev) => ({ ...prev, [product.name]: 1 }))
-    setAddedToCart((prev) => ({ ...prev, [product.name]: true }))
+    setQuantities((prev) => ({ ...prev, [productKey]: 1 }))
+    setAddedToCart((prev) => ({ ...prev, [productKey]: true }))
     setTimeout(() => {
-      setAddedToCart((prev) => ({ ...prev, [product.name]: false }))
+      setAddedToCart((prev) => ({ ...prev, [productKey]: false }))
     }, 2000)
   }
 
-  const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
+  const cartItemCount = cartItems.reduce((sum: number, item: CartItem) => sum + item.quantity, 0)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
@@ -331,13 +308,14 @@ export default function ProductsPage() {
           }`}
         >
           {filteredProducts.map((product) => {
-            const selectedVariant = selectedVariants[product.name] || "1"
+            const productKey = getProductKey(product)
+            const selectedVariant = selectedVariants[productKey] || "1"
             const variantData = variants.find((v) => v.value === selectedVariant)
             const currentPrice = product.pricePerKg * (variantData?.multiplier || 1)
             
             return (
               <Card
-                key={product.name}
+                key={productKey}
                 className="card-hover border-0 shadow-xl bg-white/90 backdrop-blur-sm overflow-hidden group"
               >
                 <CardHeader className="p-0 relative">
@@ -379,7 +357,7 @@ export default function ProductsPage() {
                       <label className="text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">Weight:</label>
                       <Select
                         value={selectedVariant}
-                        onValueChange={(value) => handleVariantChange(product.name, value)}
+                        onValueChange={(value) => handleVariantChange(product, value)}
                       >
                         <SelectTrigger className="w-24 sm:w-28 h-8 sm:h-10 border-green-200 focus:border-green-500 rounded-lg text-sm">
                           <SelectValue placeholder="Select weight" />
@@ -399,8 +377,8 @@ export default function ProductsPage() {
                       <Input
                         type="number"
                         min="1"
-                        value={quantities[product.name] || 1}
-                        onChange={(e) => handleQuantityChange(product.name, Number.parseInt(e.target.value) || 1)}
+                        value={quantities[productKey] || 1}
+                        onChange={(e) => handleQuantityChange(product, Number.parseInt(e.target.value) || 1)}
                         className="w-16 sm:w-20 h-8 sm:h-10 border-green-200 focus:border-green-500 rounded-lg text-sm"
                       />
                     </div>
@@ -408,13 +386,13 @@ export default function ProductsPage() {
                     <Button
                       onClick={() => handleAddToCart(product)}
                       className={`w-full h-10 sm:h-12 font-semibold rounded-full transition-all duration-300 text-sm sm:text-base ${
-                        addedToCart[product.name]
+                        addedToCart[productKey]
                           ? "bg-green-600 hover:bg-green-700 text-white"
                           : "gradient-green text-white hover:shadow-lg"
                       }`}
-                      disabled={addedToCart[product.name]}
+                      disabled={addedToCart[productKey]}
                     >
-                      {addedToCart[product.name] ? (
+                      {addedToCart[productKey] ? (
                         <>
                           <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                           Added to Cart
