@@ -28,7 +28,6 @@ import {
 export default function CheckoutPage() {
   const { cartItems, getTotalPrice, getDeliveryCharge, getFinalTotal, clearCart } = useCart()
   const router = useRouter()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [formData, setFormData] = useState({
     fullName: "",
     phoneNumber: "",
@@ -53,26 +52,26 @@ export default function CheckoutPage() {
 
   const generateWhatsAppMessage = () => {
     const orderDetails = cartItems
-      .map((item) => `- ${item.name} x ${item.quantity}kg = ₹${item.price * item.quantity}`)
+      .map((item) => `- ${item.name} x ${item.quantity} × ${item.weight} = ₹${(item.price * item.quantity).toFixed(2)}`)
       .join("%0A")
 
     const fullAddress = `${formData.flatNo}, ${formData.streetName}, ${formData.city}, ${formData.state} - ${formData.pinCode}`
 
-    const deliveryInfo = isFreeDelivery ? "FREE Delivery" : `Delivery Charge: ₹${deliveryCharge}`
+    const deliveryInfo = isFreeDelivery ? "FREE Delivery" : `Delivery Charge: ₹${deliveryCharge.toFixed(2)}`
 
-    const message = `Hello, I want to place an order.%0A%0AName: ${formData.fullName}%0APhone: ${formData.phoneNumber}%0AAddress: ${fullAddress}%0A%0AOrder Details:%0A${orderDetails}%0A%0ASubtotal: ₹${subtotal}%0A${deliveryInfo}%0ATotal Amount: ₹${finalTotal}`
+    const message = `Hello, I want to place an order.%0A%0AName: ${formData.fullName}%0APhone: ${formData.phoneNumber}%0AAddress: ${fullAddress}%0A%0AOrder Details:%0A${orderDetails}%0A%0ASubtotal: ₹${subtotal.toFixed(2)}%0A${deliveryInfo}%0ATotal Amount: ₹${finalTotal.toFixed(2)}`
 
     return `https://api.whatsapp.com/send?phone=917904356029&text=${message}`
   }
 
   const downloadCartDetails = () => {
     const orderDetails = cartItems
-      .map((item) => `${item.name} x ${item.quantity}kg = ₹${item.price * item.quantity}`)
+      .map((item) => `${item.name} x ${item.quantity} × ${item.weight} = ₹${(item.price * item.quantity).toFixed(2)}`)
       .join("\n")
 
     const fullAddress = `${formData.flatNo}, ${formData.streetName}, ${formData.city}, ${formData.state} - ${formData.pinCode}`
 
-    const deliveryInfo = isFreeDelivery ? "FREE Delivery (You saved ₹120!)" : `Delivery Charge: ₹${deliveryCharge}`
+    const deliveryInfo = isFreeDelivery ? "FREE Delivery (You saved ₹120!)" : `Delivery Charge: ₹${deliveryCharge.toFixed(2)}`
 
     const content = `Sri Srinivasa Flour Mills - Order Details
 =====================================
@@ -85,9 +84,9 @@ Address: ${fullAddress}
 Order Details:
 ${orderDetails}
 
-Subtotal: ₹${subtotal}
+Subtotal: ₹${subtotal.toFixed(2)}
 ${deliveryInfo}
-Total Amount: ₹${finalTotal}
+Total Amount: ₹${finalTotal.toFixed(2)}
 
 Date: ${new Date().toLocaleDateString()}
 Time: ${new Date().toLocaleTimeString()}
@@ -393,7 +392,7 @@ Time: ${new Date().toLocaleTimeString()}
                 <div className="space-y-3 sm:space-y-4 max-h-60 sm:max-h-80 overflow-y-auto">
                   {cartItems.map((item) => (
                     <div
-                      key={item.name}
+                      key={`${item.name}-${item.weight}`}
                       className="flex justify-between items-center p-3 sm:p-4 bg-green-50 rounded-xl"
                     >
                       <div className="flex-1 pr-2">
@@ -401,11 +400,11 @@ Time: ${new Date().toLocaleTimeString()}
                         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1">
                           <Badge className="gradient-green text-white border-0 text-xs w-fit">{item.category}</Badge>
                           <p className="text-xs sm:text-sm text-gray-600">
-                            {item.quantity}kg × ₹{item.price}
+                            {item.quantity} × {item.weight} × ₹{item.price.toFixed(2)}
                           </p>
                         </div>
                       </div>
-                      <p className="font-bold text-green-600 text-lg sm:text-xl">₹{item.price * item.quantity}</p>
+                      <p className="font-bold text-green-600 text-lg sm:text-xl">₹{(item.price * item.quantity).toFixed(2)}</p>
                     </div>
                   ))}
                 </div>
@@ -416,7 +415,7 @@ Time: ${new Date().toLocaleTimeString()}
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-700 font-medium">Subtotal:</span>
-                    <span className="font-bold text-gray-800">₹{subtotal}</span>
+                    <span className="font-bold text-gray-800">₹{subtotal.toFixed(2)}</span>
                   </div>
 
                   <div className="flex justify-between items-center">
@@ -431,7 +430,7 @@ Time: ${new Date().toLocaleTimeString()}
                           <p className="text-xs text-gray-500 line-through">₹120</p>
                         </div>
                       ) : (
-                        <span className="font-bold text-gray-800">₹{deliveryCharge}</span>
+                        <span className="font-bold text-gray-800">₹{deliveryCharge.toFixed(2)}</span>
                       )}
                     </div>
                   </div>
@@ -442,7 +441,7 @@ Time: ${new Date().toLocaleTimeString()}
                 <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 sm:p-6 rounded-xl">
                   <div className="flex justify-between items-center">
                     <span className="text-xl sm:text-2xl font-bold text-gray-800">Total:</span>
-                    <span className="text-2xl sm:text-4xl font-bold text-gradient">₹{finalTotal}</span>
+                    <span className="text-2xl sm:text-4xl font-bold text-gradient">₹{finalTotal.toFixed(2)}</span>
                   </div>
                   {isFreeDelivery && (
                     <p className="text-sm text-green-600 mt-2 text-center">🎉 You saved ₹120 on delivery!</p>
@@ -493,7 +492,7 @@ Time: ${new Date().toLocaleTimeString()}
               <p className="text-green-400 font-medium text-sm sm:text-base">80 Years of Legacy</p>
             </div>
           </div>
-          <p className="text-gray-400 text-sm sm:text-base">© 2024 Sri Srinivasa Flour Mills. All rights reserved.</p>
+          <p className="text-gray-400 text-sm sm:text-base">© 202 Sri Srinivasa Flour Mills. All rights reserved.</p>
         </div>
       </footer>
     </div>
