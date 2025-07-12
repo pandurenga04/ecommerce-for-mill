@@ -235,7 +235,7 @@ export default function CartPage() {
           <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {cartItems.map((item) => (
               <Card
-                key={item.name}
+                key={`${item.name}-${item.weight}`}
                 className="card-hover border-0 shadow-xl bg-white/90 backdrop-blur-sm overflow-hidden"
               >
                 <CardContent className="p-4 sm:p-8">
@@ -254,18 +254,23 @@ export default function CartPage() {
                           <div className="flex items-center gap-2 mb-2">
                             <div className="flex">
                               {[1, 2, 3, 4, 5].map((star) => (
-                                <Star key={star} className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400 text-yellow-400" />
+                                <Star
+                                  key={star}
+                                  className={`w-3 h-3 sm:w-4 sm:h-4 ${
+                                    star <= Math.floor(item.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                                  }`}
+                                />
                               ))}
                             </div>
-                            <span className="text-xs sm:text-sm text-gray-600">(4.8)</span>
+                            <span className="text-xs sm:text-sm text-gray-600">({item.rating})</span>
                           </div>
-                          <p className="text-green-600 font-bold text-lg sm:text-xl">₹{item.price}/kg</p>
+                          <p className="text-green-600 font-bold text-lg sm:text-xl">₹{item.price}/{item.weight}</p>
                         </div>
 
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => removeFromCart(item.name)}
+                          onClick={() => removeFromCart(item.name, item.weight)}
                           className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300 self-start"
                         >
                           <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -277,18 +282,18 @@ export default function CartPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => updateQuantity(item.name, Math.max(1, item.quantity - 1))}
+                            onClick={() => updateQuantity(item.name, Math.max(1, item.quantity - 1), item.weight)}
                             className="h-8 w-8 sm:h-10 sm:w-10 p-0 rounded-full border-green-200 hover:bg-green-100"
                           >
                             <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
                           </Button>
                           <span className="w-12 sm:w-16 text-center font-bold text-lg sm:text-xl text-green-700">
-                            {item.quantity}kg
+                            {item.quantity} × {item.weight}
                           </span>
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => updateQuantity(item.name, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.name, item.quantity + 1, item.weight)}
                             className="h-8 w-8 sm:h-10 sm:w-10 p-0 rounded-full border-green-200 hover:bg-green-100"
                           >
                             <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -296,7 +301,7 @@ export default function CartPage() {
                         </div>
 
                         <div className="text-left sm:text-right">
-                          <p className="font-bold text-2xl sm:text-3xl text-gradient">₹{item.price * item.quantity}</p>
+                          <p className="font-bold text-2xl sm:text-3xl text-gradient">₹{(item.price * item.quantity).toFixed(2)}</p>
                         </div>
                       </div>
                     </div>
@@ -319,16 +324,16 @@ export default function CartPage() {
                 <div className="space-y-3 sm:space-y-4 max-h-48 sm:max-h-64 overflow-y-auto">
                   {cartItems.map((item) => (
                     <div
-                      key={item.name}
+                      key={`${item.name}-${item.weight}`}
                       className="flex justify-between items-center p-3 sm:p-4 bg-green-50 rounded-xl"
                     >
                       <div className="flex-1 pr-2">
                         <p className="font-semibold text-gray-800 text-sm sm:text-base line-clamp-2">{item.name}</p>
                         <p className="text-xs sm:text-sm text-gray-600">
-                          {item.quantity}kg × ₹{item.price}
+                          {item.quantity} × {item.weight} × ₹{item.price}
                         </p>
                       </div>
-                      <p className="font-bold text-green-600 text-base sm:text-lg">₹{item.price * item.quantity}</p>
+                      <p className="font-bold text-green-600 text-base sm:text-lg">₹{(item.price * item.quantity).toFixed(2)}</p>
                     </div>
                   ))}
                 </div>
@@ -339,7 +344,7 @@ export default function CartPage() {
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-700 font-medium">Subtotal:</span>
-                    <span className="font-bold text-gray-800">₹{subtotal}</span>
+                    <span className="font-bold text-gray-800">₹{subtotal.toFixed(2)}</span>
                   </div>
                   
                   <div className="flex justify-between items-center">
@@ -354,7 +359,7 @@ export default function CartPage() {
                           <p className="text-xs text-gray-500 line-through">₹120</p>
                         </div>
                       ) : (
-                        <span className="font-bold text-gray-800">₹{deliveryCharge}</span>
+                        <span className="font-bold text-gray-800">₹{deliveryCharge.toFixed(2)}</span>
                       )}
                     </div>
                   </div>
@@ -365,7 +370,7 @@ export default function CartPage() {
                 <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 sm:p-6 rounded-xl">
                   <div className="flex justify-between items-center">
                     <span className="text-xl sm:text-2xl font-bold text-gray-800">Total:</span>
-                    <span className="text-2xl sm:text-3xl font-bold text-gradient">₹{finalTotal}</span>
+                    <span className="text-2xl sm:text-3xl font-bold text-gradient">₹{finalTotal.toFixed(2)}</span>
                   </div>
                   {isFreeDelivery && (
                     <p className="text-sm text-green-600 mt-2 text-center">
