@@ -482,7 +482,7 @@ export default function CartPage() {
               <p className="text-green-400 font-medium text-sm sm:text-base">80 Years of Legacy</p>
             </div>
           </div>
-          <p className="text-gray-400 text-sm sm:text-base">© 2024 Sri Srinivasa Flour Mills. All rights reserved.</p>
+          <p className="text-gray-400 text-sm sm:text-base">© 2025 Sri Srinivasa Flour Mills. All rights reserved(BIT PATTERNS).</p>
         </div>
       </footer>
     </div>
