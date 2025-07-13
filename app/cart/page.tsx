@@ -9,39 +9,47 @@ import { Minus, Plus, Trash2, ShoppingCart, Leaf, ArrowRight, Star, Menu, X, Tru
 import { useState } from "react"
 
 export default function CartPage() {
-  const { cartItems, updateQuantity, removeFromCart, getTotalPrice, getFinalTotal } = useCart()
+  const { cartItems, updateQuantity, removeFromCart, getTotalPrice } = useCart()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  // Calculate delivery charge based on new rules
+  // ✅ Updated Delivery Charge Logic
   const calculateDeliveryCharge = () => {
     const subtotal = getTotalPrice()
     let totalWeightKg = 0
     let hasMasala = false
+    let hasOther = false
 
     cartItems.forEach((item) => {
+      const weightStr = item.weight.toLowerCase()
+      let weightKg = 0
+
+      if (weightStr.includes("kg")) {
+        weightKg = parseFloat(weightStr.replace("kg", ""))
+      } else if (weightStr.includes("g")) {
+        weightKg = parseFloat(weightStr.replace("g", "")) / 1000
+      }
+
       if (item.category === "Masala Powders") {
         hasMasala = true
       } else {
-        // Parse weight (e.g., "100g", "250g", "500g", "1kg") to kilograms
-        const weightStr = item.weight.toLowerCase()
-        let weightKg = 0
-        if (weightStr.includes("kg")) {
-          weightKg = parseFloat(weightStr.replace("kg", ""))
-        } else if (weightStr.includes("g")) {
-          weightKg = parseFloat(weightStr.replace("g", "")) / 1000
-        }
+        hasOther = true
         totalWeightKg += weightKg * item.quantity
       }
     })
 
     let deliveryCharge = 0
-    // Masala Powders: ₹100 if subtotal < ₹699, free otherwise
-    if (hasMasala && subtotal < 699) {
-      deliveryCharge += 100
-    }
-    // Other categories: ₹60 per kg
-    if (totalWeightKg > 0) {
-      deliveryCharge += totalWeightKg * 60
+
+    if (hasMasala && hasOther) {
+      // Mixed categories → ₹90 per kg (no ₹100)
+      deliveryCharge = totalWeightKg * 90
+    } else if (hasMasala && !hasOther) {
+      // Only Masala → ₹100 if subtotal < ₹699
+      if (subtotal < 699) {
+        deliveryCharge = 100
+      }
+    } else if (hasOther && !hasMasala) {
+      // Only non-masala → ₹60/kg
+      deliveryCharge = totalWeightKg * 60
     }
 
     return deliveryCharge
@@ -51,7 +59,7 @@ export default function CartPage() {
   const subtotal = getTotalPrice()
   const finalTotal = subtotal + deliveryCharge
   const isFreeDelivery = deliveryCharge === 0
-
+  
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
