@@ -171,7 +171,7 @@ export default function HomePage() {
               { icon: Clock, number: "80+", label: "Years Legacy", color: "text-green-600" },
               { icon: Award, number: "23+", label: "Premium Products", color: "text-emerald-600" },
               { icon: Users, number: "5000+", label: "Happy Customers", color: "text-teal-600" },
-              { icon: Star, number: "5.0", label: "Customer Rating", color: "text-green-600" },
+              { icon: Star, number: "4.8", label: "Customer Rating", color: "text-green-600" },
             ].map((stat, index) => (
               <Card
                 key={index}
@@ -395,7 +395,7 @@ export default function HomePage() {
 
           <div className="border-t border-gray-700 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center">
             <p className="text-gray-400 text-sm sm:text-base">
-              © 2024 Sri Srinivasa Flour Mills. All rights reserved by BIT PATTERNS. Made with ❤️ for quality.
+              © 2025 Sri Srinivasa Flour Mills. All rights reserved by BIT PATTERNS. Made with ❤️ for quality.
             </p>
           </div>
         </div>
