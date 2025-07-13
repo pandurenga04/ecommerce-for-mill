@@ -9,8 +9,48 @@ import { Minus, Plus, Trash2, ShoppingCart, Leaf, ArrowRight, Star, Menu, X, Tru
 import { useState } from "react"
 
 export default function CartPage() {
-  const { cartItems, updateQuantity, removeFromCart, getTotalPrice, getDeliveryCharge, getFinalTotal } = useCart()
+  const { cartItems, updateQuantity, removeFromCart, getTotalPrice, getFinalTotal } = useCart()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  // Calculate delivery charge based on new rules
+  const calculateDeliveryCharge = () => {
+    const subtotal = getTotalPrice()
+    let totalWeightKg = 0
+    let hasMasala = false
+
+    cartItems.forEach((item) => {
+      if (item.category === "Masala Powders") {
+        hasMasala = true
+      } else {
+        // Parse weight (e.g., "100g", "250g", "500g", "1kg") to kilograms
+        const weightStr = item.weight.toLowerCase()
+        let weightKg = 0
+        if (weightStr.includes("kg")) {
+          weightKg = parseFloat(weightStr.replace("kg", ""))
+        } else if (weightStr.includes("g")) {
+          weightKg = parseFloat(weightStr.replace("g", "")) / 1000
+        }
+        totalWeightKg += weightKg * item.quantity
+      }
+    })
+
+    let deliveryCharge = 0
+    // Masala Powders: ₹100 if subtotal < ₹699, free otherwise
+    if (hasMasala && subtotal < 699) {
+      deliveryCharge += 100
+    }
+    // Other categories: ₹60 per kg
+    if (totalWeightKg > 0) {
+      deliveryCharge += totalWeightKg * 60
+    }
+
+    return deliveryCharge
+  }
+
+  const deliveryCharge = calculateDeliveryCharge()
+  const subtotal = getTotalPrice()
+  const finalTotal = subtotal + deliveryCharge
+  const isFreeDelivery = deliveryCharge === 0
 
   if (cartItems.length === 0) {
     return (
@@ -112,11 +152,6 @@ export default function CartPage() {
     )
   }
 
-  const subtotal = getTotalPrice()
-  const deliveryCharge = getDeliveryCharge()
-  const finalTotal = getFinalTotal()
-  const isFreeDelivery = deliveryCharge === 0
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       {/* Navigation */}
@@ -190,8 +225,8 @@ export default function CartPage() {
           <p className="text-base sm:text-xl text-gray-600">Review your selected items</p>
         </div>
 
-        {/* Free Delivery Banner */}
-        {!isFreeDelivery && subtotal < 799 && (
+        {/* Free Delivery Banner for Masala Powders */}
+        {!isFreeDelivery && subtotal < 699 && cartItems.some(item => item.category === "Masala Powders") && (
           <div className="mb-6 sm:mb-8">
             <Card className="border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-yellow-50">
               <CardContent className="p-4 sm:p-6">
@@ -199,10 +234,31 @@ export default function CartPage() {
                   <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
                   <div>
                     <p className="font-semibold text-orange-800 text-sm sm:text-base">
-                      Add ₹{799 - subtotal} more for FREE delivery!
+                      Add ₹{699 - subtotal} more for FREE delivery on Masala Powders!
                     </p>
                     <p className="text-orange-600 text-xs sm:text-sm">
-                      Currently: ₹120 delivery charge • Free delivery on orders ₹799+
+                      Currently: ₹100 delivery charge for Masala Powders • Free delivery on orders ₹699+
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Delivery Charge Banner for Other Categories */}
+        {!isFreeDelivery && cartItems.some(item => item.category !== "Masala Powders") && (
+          <div className="mb-6 sm:mb-8">
+            <Card className="border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-yellow-50">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-center gap-3 text-center">
+                  <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
+                  <div>
+                    <p className="font-semibold text-orange-800 text-sm sm:text-base">
+                      Delivery charge for Flours & Mixes and Bathing Powders: ₹60 per kg
+                    </p>
+                    <p className="text-orange-600 text-xs sm:text-sm">
+                      Current delivery charge: ₹{deliveryCharge.toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -212,7 +268,7 @@ export default function CartPage() {
         )}
 
         {/* Free Delivery Success Banner */}
-        {isFreeDelivery && (
+        {isFreeDelivery && cartItems.some(item => item.category === "Masala Powders") && (
           <div className="mb-6 sm:mb-8">
             <Card className="border-2 border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
               <CardContent className="p-4 sm:p-6">
@@ -220,7 +276,7 @@ export default function CartPage() {
                   <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
                   <div>
                     <p className="font-semibold text-green-800 text-sm sm:text-base">
-                      🎉 Congratulations! You've earned FREE delivery!
+                      🎉 Congratulations! You've earned FREE delivery on Masala Powders!
                     </p>
                     <p className="text-green-600 text-xs sm:text-sm">Your order qualifies for free shipping</p>
                   </div>
@@ -349,14 +405,16 @@ export default function CartPage() {
                   
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
-                      <Truck className="w-4 h-4 text-gray-600" />
+                      < Truck className="w-4 h-4 text-gray-600" />
                       <span className="text-gray-700 font-medium">Delivery:</span>
                     </div>
                     <div className="text-right">
                       {isFreeDelivery ? (
                         <div>
                           <span className="font-bold text-green-600">FREE</span>
-                          <p className="text-xs text-gray-500 line-through">₹120</p>
+                          <p className="text-xs text-gray-500 line-through">
+                            {cartItems.some(item => item.category === "Masala Powders") ? "₹100" : ""}
+                          </p>
                         </div>
                       ) : (
                         <span className="font-bold text-gray-800">₹{deliveryCharge.toFixed(2)}</span>
@@ -372,9 +430,9 @@ export default function CartPage() {
                     <span className="text-xl sm:text-2xl font-bold text-gray-800">Total:</span>
                     <span className="text-2xl sm:text-3xl font-bold text-gradient">₹{finalTotal.toFixed(2)}</span>
                   </div>
-                  {isFreeDelivery && (
+                  {isFreeDelivery && cartItems.some(item => item.category === "Masala Powders") && (
                     <p className="text-sm text-green-600 mt-2 text-center">
-                      🎉 You saved ₹120 on delivery!
+                      🎉 You saved ₹100 on delivery for Masala Powders!
                     </p>
                   )}
                 </div>
