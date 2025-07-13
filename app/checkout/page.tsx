@@ -26,7 +26,7 @@ import {
 } from "lucide-react"
 
 export default function CheckoutPage() {
-  const { cartItems, getTotalPrice, getDeliveryCharge, getFinalTotal, clearCart } = useCart()
+  const { cartItems, getTotalPrice, clearCart } = useCart()
   const router = useRouter()
   const [formData, setFormData] = useState({
     fullName: "",
@@ -45,9 +45,44 @@ export default function CheckoutPage() {
     }))
   }
 
+  // Calculate delivery charge based on new rules
+  const calculateDeliveryCharge = () => {
+    const subtotal = getTotalPrice()
+    let totalWeightKg = 0
+    let hasMasala = false
+
+    cartItems.forEach((item) => {
+      if (item.category === "Masala Powders") {
+        hasMasala = true
+      } else {
+        // Parse weight (e.g., "100g", "250g", "500g", "1kg") to kilograms
+        const weightStr = item.weight.toLowerCase()
+        let weightKg = 0
+        if (weightStr.includes("kg")) {
+          weightKg = parseFloat(weightStr.replace("kg", ""))
+        } else if (weightStr.includes("g")) {
+          weightKg = parseFloat(weightStr.replace("g", "")) / 1000
+        }
+        totalWeightKg += weightKg * item.quantity
+      }
+    })
+
+    let deliveryCharge = 0
+    // Masala Powders: ₹100 if subtotal < ₹699, free otherwise
+    if (hasMasala && subtotal < 699) {
+      deliveryCharge += 100
+    }
+    // Other categories: ₹60 per kg
+    if (totalWeightKg > 0) {
+      deliveryCharge += totalWeightKg * 60
+    }
+
+    return deliveryCharge
+  }
+
   const subtotal = getTotalPrice()
-  const deliveryCharge = getDeliveryCharge()
-  const finalTotal = getFinalTotal()
+  const deliveryCharge = calculateDeliveryCharge()
+  const finalTotal = subtotal + deliveryCharge
   const isFreeDelivery = deliveryCharge === 0
 
   const generateWhatsAppMessage = () => {
@@ -57,7 +92,9 @@ export default function CheckoutPage() {
 
     const fullAddress = `${formData.flatNo}, ${formData.streetName}, ${formData.city}, ${formData.state} - ${formData.pinCode}`
 
-    const deliveryInfo = isFreeDelivery ? "FREE Delivery" : `Delivery Charge: ₹${deliveryCharge.toFixed(2)}`
+    const deliveryInfo = isFreeDelivery
+      ? "FREE Delivery"
+      : `Delivery Charge: ₹${deliveryCharge.toFixed(2)}`
 
     const message = `Hello, I want to place an order.%0A%0AName: ${formData.fullName}%0APhone: ${formData.phoneNumber}%0AAddress: ${fullAddress}%0A%0AOrder Details:%0A${orderDetails}%0A%0ASubtotal: ₹${subtotal.toFixed(2)}%0A${deliveryInfo}%0ATotal Amount: ₹${finalTotal.toFixed(2)}`
 
@@ -71,7 +108,11 @@ export default function CheckoutPage() {
 
     const fullAddress = `${formData.flatNo}, ${formData.streetName}, ${formData.city}, ${formData.state} - ${formData.pinCode}`
 
-    const deliveryInfo = isFreeDelivery ? "FREE Delivery (You saved ₹120!)" : `Delivery Charge: ₹${deliveryCharge.toFixed(2)}`
+    const deliveryInfo = isFreeDelivery
+      ? cartItems.some(item => item.category === "Masala Powders")
+        ? "FREE Delivery (You saved ₹100!)"
+        : "FREE Delivery"
+      : `Delivery Charge: ₹${deliveryCharge.toFixed(2)}`
 
     const content = `Sri Srinivasa Flour Mills - Order Details
 =====================================
@@ -202,8 +243,50 @@ Time: ${new Date().toLocaleTimeString()}
           <p className="text-base sm:text-xl text-gray-600">Complete your order</p>
         </div>
 
-        {/* Free Delivery Banner */}
-        {isFreeDelivery && (
+        {/* Free Delivery Banner for Masala Powders */}
+        {!isFreeDelivery && subtotal < 699 && cartItems.some(item => item.category === "Masala Powders") && (
+          <div className="mb-6 sm:mb-8">
+            <Card className="border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-yellow-50">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-center gap-3 text-center">
+                  <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
+                  <div>
+                    <p className="font-semibold text-orange-800 text-sm sm:text-base">
+                      Add ₹{699 - subtotal} more for FREE delivery on Masala Powders!
+                    </p>
+                    <p className="text-orange-600 text-xs sm:text-sm">
+                      Currently: ₹100 delivery charge for Masala Powders • Free delivery on orders ₹699+
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Delivery Charge Banner for Other Categories */}
+        {!isFreeDelivery && cartItems.some(item => item.category !== "Masala Powders") && (
+          <div className="mb-6 sm:mb-8">
+            <Card className="border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-yellow-50">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-center gap-3 text-center">
+                  <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
+                  <div>
+                    <p className="font-semibold text-orange-800 text-sm sm:text-base">
+                      Delivery charge for Flours & Mixes and Bathing Powders: ₹60 per kg
+                    </p>
+                    <p className="text-orange-600 text-xs sm:text-sm">
+                      Current delivery charge: ₹{deliveryCharge.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Free Delivery Success Banner */}
+        {isFreeDelivery && cartItems.some(item => item.category === "Masala Powders") && (
           <div className="mb-6 sm:mb-8">
             <Card className="border-2 border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
               <CardContent className="p-4 sm:p-6">
@@ -211,9 +294,9 @@ Time: ${new Date().toLocaleTimeString()}
                   <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
                   <div>
                     <p className="font-semibold text-green-800 text-sm sm:text-base">
-                      🎉 Congratulations! You've earned FREE delivery!
+                      🎉 Congratulations! You've earned FREE delivery on Masala Powders!
                     </p>
-                    <p className="text-green-600 text-xs sm:text-sm">You saved ₹120 on delivery charges</p>
+                    <p className="text-green-600 text-xs sm:text-sm">You saved ₹100 on delivery</p>
                   </div>
                 </div>
               </CardContent>
@@ -427,7 +510,9 @@ Time: ${new Date().toLocaleTimeString()}
                       {isFreeDelivery ? (
                         <div>
                           <span className="font-bold text-green-600">FREE</span>
-                          <p className="text-xs text-gray-500 line-through">₹120</p>
+                          {cartItems.some(item => item.category === "Masala Powders") && (
+                            <p className="text-xs text-gray-500 line-through">₹100</p>
+                          )}
                         </div>
                       ) : (
                         <span className="font-bold text-gray-800">₹{deliveryCharge.toFixed(2)}</span>
@@ -443,8 +528,8 @@ Time: ${new Date().toLocaleTimeString()}
                     <span className="text-xl sm:text-2xl font-bold text-gray-800">Total:</span>
                     <span className="text-2xl sm:text-4xl font-bold text-gradient">₹{finalTotal.toFixed(2)}</span>
                   </div>
-                  {isFreeDelivery && (
-                    <p className="text-sm text-green-600 mt-2 text-center">🎉 You saved ₹120 on delivery!</p>
+                  {isFreeDelivery && cartItems.some(item => item.category === "Masala Powders") && (
+                    <p className="text-sm text-green-600 mt-2 text-center">🎉 You saved ₹100 on delivery!</p>
                   )}
                 </div>
               </CardContent>
@@ -492,7 +577,7 @@ Time: ${new Date().toLocaleTimeString()}
               <p className="text-green-400 font-medium text-sm sm:text-base">80 Years of Legacy</p>
             </div>
           </div>
-          <p className="text-gray-400 text-sm sm:text-base">© 202 Sri Srinivasa Flour Mills. All rights reserved.</p>
+          <p className="text-gray-400 text-sm sm:text-base">© 2025 Sri Srinivasa Flour Mills. All rights reserved.</p>
         </div>
       </footer>
     </div>
