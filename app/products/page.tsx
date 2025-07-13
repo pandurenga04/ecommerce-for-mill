@@ -53,8 +53,8 @@ const products: Record<string, Product[]> = {
     { name: "Ragi Flour (Keppai)", pricePerKg: 80, image: "https://www.jiomart.com/images/product/original/rvvziovn9o/farmbean-ragi-flour-1kg-ragi-mavu-keppai-mavu-ragi-atta-finger-millet-flour-ragulu-ragi-nachani-organic-flour-rich-in-dietary-fibers-healthy-food-gluten-free-atta-no-preservatives-no-trans-fats-high-protein-100-more-fibre-product-images-orvvziovn9o-p603878066-5-202308151317.jpg?im=Resize=(420,420)", rating: 4.8, reviews: 189, category: "Flours & Mixes" },
     { name: "Rice Flour", pricePerKg: 60, image: "https://m.media-amazon.com/images/I/51GswgOU9ZL._UF1000,1000_QL80_.jpg", rating: 4.6, reviews: 267, category: "Flours & Mixes" },
     { name: "Idiyappam Flour", pricePerKg: 70, image: "https://mirchi.com/os/cdn/content/images/idiyappam%20flour%20dharshana%20homemade%20food_medium_0514144.webp", rating: 4.7, reviews: 145, category: "Flours & Mixes" },
-    { name: "Rice Upma Mix", pricePerKg: 350, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:GetQkkjj61VedTyCHq4YIvDQwLK6QUJP8B5optog&s", rating: 4.5, reviews: 76, category: "Flours & Mixes" },
-    { name: "Rava Dosa Mix", pricePerKg: 300, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:GetQSSWfCpC9CGGhXyDcRfC1CFdkBIHa41XURtnw&s", rating: 4.6, reviews: 98, category: "Flours & Mixes" },
+    { name: "Rice Upma Mix", pricePerKg: 350, image: "https://rakskitchen.net/wp-content/uploads/2015/07/19850357131_0789993d70_z-500x500.jpg", rating: 4.5, reviews: 76, category: "Flours & Mixes" },
+    { name: "Rava Dosa Mix", pricePerKg: 300, image: "https://rakskitchen.net/wp-content/uploads/2016/03/Rava-dosai-recipe-500x500.jpg", rating: 4.6, reviews: 98, category: "Flours & Mixes" },
   ],
   "Bathing Powders": [
     { name: "Herbal Bath(Sthnana) Powder", pricePerKg: 400, image: "https://5.imimg.com/data5/SELLER/Default/2023/2/HR/KM/MD/9313101/thuvalai-powder-herbal-bath-powder-for-adults.jpg", rating: 4.8, reviews: 156, category: "Bathing Powders" },
