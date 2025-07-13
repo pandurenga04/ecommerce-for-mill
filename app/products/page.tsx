@@ -39,7 +39,7 @@ const products: Record<string, Product[]> = {
     { name: "Idli Powder", pricePerKg: 300, image: "https://mylaporeganapathys.com/wp-content/uploads/2025/05/yellu-idly-podi.jpg", rating: 4.7, reviews: 156, category: "Masala Powders" },
     { name: "Sesame Powder", pricePerKg: 400, image: "https://www.yummytummyaarthi.com/wp-content/uploads/2017/01/1-20.jpg", rating: 4.6, reviews: 87, category: "Masala Powders" },
     { name: "Vathal Powder", pricePerKg: 400, image: "https://www.yummytummyaarthi.com/wp-content/uploads/2014/07/2.-11.png", rating: 4.8, reviews: 92, category: "Masala Powders" },
-    { name: "Coriander Powder", pricePerKg: 300, image: "https://img500.exportersindia.com/product_images/bc-500/dir_168/5034701/coriander-seeds-powder-1498201560-3083197.jpeg", rating: 4.9, reviews: 203, category: "Masala Powders" },
+    { name: "CORIANDER Powder", pricePerKg: 300, image: "https://img500.exportersindia.com/product_images/bc-500/dir_168/5034701/coriander-seeds-powder-1498201560-3083197.jpeg", rating: 4.9, reviews: 203, category: "Masala Powders" },
     { name: "Turmeric Powder", pricePerKg: 450, image: "https://domf5oio6qrcr.cloudfront.net/medialibrary/15065/conversions/fa246ce0-054b-4892-bf30-5eb43cd938aa-thumb.jpg", rating: 4.8, reviews: 167, category: "Masala Powders" },
     { name: "Curry Leaves Powder", pricePerKg: 400, image: "https://www.indianveggiedelight.com/wp-content/uploads/2021/07/curryleaves-chutney-powder-featured.jpg", rating: 4.7, reviews: 78, category: "Masala Powders" },
     { name: "Drumstick Leaves Powder", pricePerKg: 400, image: "https://5.imimg.com/data5/OC/YS/MY-28365108/natural-drumstick-leaves-powder-500x500.jpg", rating: 4.6, reviews: 65, category: "Masala Powders" },
@@ -74,7 +74,6 @@ const variants: Variant[] = [
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All")
   const [searchTerm, setSearchTerm] = useState<string>("")
-  const [quantities, setQuantities] = useState<Record<string, number>>({})
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({})
   const [addedToCart, setAddedToCart] = useState<Record<string, boolean>>({})
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -108,24 +107,18 @@ export default function ProductsPage() {
 
   const getProductKey = (product: Product): string => `${product.name}_${product.category}`
 
-  const handleQuantityChange = (product: Product, quantity: number) => {
-    setQuantities((prev) => ({ ...prev, [getProductKey(product)]: quantity }))
-  }
-
   const handleVariantChange = (product: Product, variant: string) => {
     setSelectedVariants((prev) => ({ ...prev, [getProductKey(product)]: variant }))
   }
 
   const handleAddToCart = (product: Product) => {
     const productKey = getProductKey(product)
-    const quantity = quantities[productKey] || 1
     const variant = selectedVariants[productKey] || "1"
     const variantData = variants.find((v) => v.value === variant)
     const price = product.pricePerKg * (variantData?.multiplier || 1)
     const weight = variantData?.label || "1kg"
 
-    addToCart({ ...product, quantity, price, weight })
-    setQuantities((prev) => ({ ...prev, [productKey]: 1 }))
+    addToCart({ ...product, quantity: 1, price, weight })
     setAddedToCart((prev) => ({ ...prev, [productKey]: true }))
     setTimeout(() => {
       setAddedToCart((prev) => ({ ...prev, [productKey]: false }))
@@ -370,17 +363,6 @@ export default function ProductsPage() {
                           ))}
                         </SelectContent>
                       </Select>
-                    </div>
-
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <label className="text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">Qty:</label>
-                      <Input
-                        type="number"
-                        min="1"
-                        value={quantities[productKey] || 1}
-                        onChange={(e) => handleQuantityChange(product, Number.parseInt(e.target.value) || 1)}
-                        className="w-16 sm:w-20 h-8 sm:h-10 border-green-200 focus:border-green-500 rounded-lg text-sm"
-                      />
                     </div>
 
                     <Button
