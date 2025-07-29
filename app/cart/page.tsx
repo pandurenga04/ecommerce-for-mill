@@ -15,7 +15,7 @@ export default function CartPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isTamilNadu, setIsTamilNadu] = useState(true) // Default to Tamil Nadu
 
-  // Updated Delivery Charge Logic
+  // Delivery Charge Logic
   const calculateDeliveryCharge = () => {
     const subtotal = getTotalPrice()
     let masalaWeightKg = 0
@@ -242,7 +242,7 @@ export default function CartPage() {
                   <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
                   <div>
                     <p className="font-semibold text-orange-800 text-sm sm:text-base">
-                      Add ₹{599 - subtotal} more for FREE delivery on Masala Powders!
+                      Add ₹{(599 - subtotal).toFixed(2)} more for FREE delivery on Masala Powders!
                     </p>
                     <p className="text-orange-600 text-xs sm:text-sm">
                       Currently: ₹{isTamilNadu ? "70" : "140"}/kg delivery charge for Masala Powders • Free delivery on orders ₹599+
