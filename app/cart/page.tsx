@@ -11,13 +11,16 @@ import { useState } from "react"
 export default function CartPage() {
   const { cartItems, updateQuantity, removeFromCart, getTotalPrice } = useCart()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [state, setState] = useState("") // Add state to determine Tamil Nadu or not
 
-  // ✅ Updated Delivery Charge Logic
+  // Updated Delivery Charge Logic
   const calculateDeliveryCharge = () => {
     const subtotal = getTotalPrice()
-    let totalWeightKg = 0
+    let masalaWeightKg = 0
+    let otherWeightKg = 0
     let hasMasala = false
     let hasOther = false
+    const isTamilNadu = state.toLowerCase().includes("tamil nadu")
 
     cartItems.forEach((item) => {
       const weightStr = item.weight.toLowerCase()
@@ -31,25 +34,21 @@ export default function CartPage() {
 
       if (item.category === "Masala Powders") {
         hasMasala = true
+        masalaWeightKg += weightKg * item.quantity
       } else {
         hasOther = true
-        totalWeightKg += weightKg * item.quantity
+        otherWeightKg += weightKg * item.quantity
       }
     })
 
     let deliveryCharge = 0
-
-    if (hasMasala && hasOther) {
-      // Mixed categories → ₹90 per kg (no ₹100)
-      deliveryCharge = totalWeightKg * 90
-    } else if (hasMasala && !hasOther) {
-      // Only Masala → ₹100 if subtotal < ₹699
-      if (subtotal < 699) {
-        deliveryCharge = 100
-      }
-    } else if (hasOther && !hasMasala) {
-      // Only non-masala → ₹60/kg
-      deliveryCharge = totalWeightKg * 60
+    // Masala Powders: Free delivery if subtotal >= ₹599, else ₹60/kg in TN, ₹120/kg outside TN
+    if (hasMasala && subtotal < 599) {
+      deliveryCharge += isTamilNadu ? masalaWeightKg * 60 : masalaWeightKg * 120
+    }
+    // Other categories: ₹90/kg in TN, ₹180/kg outside TN
+    if (otherWeightKg > 0) {
+      deliveryCharge += isTamilNadu ? otherWeightKg * 90 : otherWeightKg * 180
     }
 
     return deliveryCharge
@@ -59,7 +58,7 @@ export default function CartPage() {
   const subtotal = getTotalPrice()
   const finalTotal = subtotal + deliveryCharge
   const isFreeDelivery = deliveryCharge === 0
-  
+
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
@@ -153,7 +152,7 @@ export default function CartPage() {
                 <p className="text-green-400 font-medium text-sm sm:text-base">80 Years of Legacy</p>
               </div>
             </div>
-            <p className="text-gray-400 text-sm sm:text-base">© 2024 Sri Srinivasa Flour Mills. All rights reserved.</p>
+            <p className="text-gray-400 text-sm sm:text-base">© 2025 Sri Srinivasa Flour Mills. All rights reserved.</p>
           </div>
         </footer>
       </div>
@@ -234,7 +233,7 @@ export default function CartPage() {
         </div>
 
         {/* Free Delivery Banner for Masala Powders */}
-        {!isFreeDelivery && subtotal < 699 && cartItems.some(item => item.category === "Masala Powders") && (
+        {!isFreeDelivery && subtotal < 599 && cartItems.some(item => item.category === "Masala Powders") && (
           <div className="mb-6 sm:mb-8">
             <Card className="border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-yellow-50">
               <CardContent className="p-4 sm:p-6">
@@ -242,10 +241,10 @@ export default function CartPage() {
                   <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
                   <div>
                     <p className="font-semibold text-orange-800 text-sm sm:text-base">
-                      Add ₹{699 - subtotal} more for FREE delivery on Masala Powders!
+                      Add ₹{599 - subtotal} more for FREE delivery on Masala Powders!
                     </p>
                     <p className="text-orange-600 text-xs sm:text-sm">
-                      Currently: ₹100 delivery charge for Masala Powders • Free delivery on orders ₹699+
+                      Currently: ₹{state.toLowerCase().includes("tamil nadu") ? "60" : "120"}/kg delivery charge for Masala Powders • Free delivery on orders ₹599+
                     </p>
                   </div>
                 </div>
@@ -263,7 +262,7 @@ export default function CartPage() {
                   <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
                   <div>
                     <p className="font-semibold text-orange-800 text-sm sm:text-base">
-                      Delivery charge for Flours & Mixes and Bathing Powders: ₹60 per kg
+                      Delivery charge for Flours & Mixes and Bathing Powders: ₹{state.toLowerCase().includes("tamil nadu") ? "90" : "180"} per kg
                     </p>
                     <p className="text-orange-600 text-xs sm:text-sm">
                       Current delivery charge: ₹{deliveryCharge.toFixed(2)}
@@ -286,7 +285,7 @@ export default function CartPage() {
                     <p className="font-semibold text-green-800 text-sm sm:text-base">
                       🎉 Congratulations! You've earned FREE delivery on Masala Powders!
                     </p>
-                    <p className="text-green-600 text-xs sm:text-sm">Your order qualifies for free shipping</p>
+                    <p className="text-green-600 text-xs sm:text-sm">You saved ₹{state.toLowerCase().includes("tamil nadu") ? "60" : "120"}/kg on delivery</p>
                   </div>
                 </div>
               </CardContent>
@@ -413,16 +412,18 @@ export default function CartPage() {
                   
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
-                      < Truck className="w-4 h-4 text-gray-600" />
+                      <Truck className="w-4 h-4 text-gray-600" />
                       <span className="text-gray-700 font-medium">Delivery:</span>
                     </div>
                     <div className="text-right">
                       {isFreeDelivery ? (
                         <div>
                           <span className="font-bold text-green-600">FREE</span>
-                          <p className="text-xs text-gray-500 line-through">
-                            {cartItems.some(item => item.category === "Masala Powders") ? "₹100" : ""}
-                          </p>
+                          {cartItems.some(item => item.category === "Masala Powders") && (
+                            <p className="text-xs text-gray-500 line-through">
+                              ₹{state.toLowerCase().includes("tamil nadu") ? "60" : "120"}/kg
+                            </p>
+                          )}
                         </div>
                       ) : (
                         <span className="font-bold text-gray-800">₹{deliveryCharge.toFixed(2)}</span>
@@ -440,7 +441,7 @@ export default function CartPage() {
                   </div>
                   {isFreeDelivery && cartItems.some(item => item.category === "Masala Powders") && (
                     <p className="text-sm text-green-600 mt-2 text-center">
-                      🎉 You saved ₹100 on delivery for Masala Powders!
+                      🎉 You saved ₹{state.toLowerCase().includes("tamil nadu") ? "60" : "120"}/kg on delivery for Masala Powders!
                     </p>
                   )}
                 </div>
@@ -482,7 +483,7 @@ export default function CartPage() {
               <p className="text-green-400 font-medium text-sm sm:text-base">80 Years of Legacy</p>
             </div>
           </div>
-          <p className="text-gray-400 text-sm sm:text-base">© 2025 Sri Srinivasa Flour Mills. All rights reserved(BIT PATTERNS).</p>
+          <p className="text-gray-400 text-sm sm:text-base">© 2025 Sri Srinivasa Flour Mills. All rights reserved.</p>
         </div>
       </footer>
     </div>
