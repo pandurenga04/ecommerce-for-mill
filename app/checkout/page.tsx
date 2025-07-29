@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
 import { useCart } from "@/contexts/cart-context"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -36,6 +37,7 @@ export default function CheckoutPage() {
     state: "",
     pinCode: "",
   })
+  const [isTamilNadu, setIsTamilNadu] = useState(true) // Default to Tamil Nadu
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -50,7 +52,6 @@ export default function CheckoutPage() {
     let masalaWeightKg = 0
     let otherWeightKg = 0
     let hasMasala = false
-    const isTamilNadu = formData.state.toLowerCase().includes("tamil nadu")
 
     cartItems.forEach((item) => {
       const weightStr = item.weight.toLowerCase()
@@ -98,7 +99,7 @@ export default function CheckoutPage() {
       ? "FREE Delivery"
       : `Delivery Charge: ₹${deliveryCharge.toFixed(2)}`
 
-    const message = `Hello, I want to place an order.%0A%0AName: ${formData.fullName}%0APhone: ${formData.phoneNumber}%0AAddress: ${fullAddress}%0A%0AOrder Details:%0A${orderDetails}%0A%0ASubtotal: ₹${subtotal.toFixed(2)}%0A${deliveryInfo}%0ATotal Amount: ₹${finalTotal.toFixed(2)}`
+    const message = `Hello, I want to place an order.%0A%0AName: ${formData.fullName}%0APhone: ${formData.phoneNumber}%0AAddress: ${fullAddress}%0ALocation: ${isTamilNadu ? "Tamil Nadu" : "Outside Tamil Nadu"}%0A%0AOrder Details:%0A${orderDetails}%0A%0ASubtotal: ₹${subtotal.toFixed(2)}%0A${deliveryInfo}%0ATotal Amount: ₹${finalTotal.toFixed(2)}`
 
     return `https://api.whatsapp.com/send?phone=917904356029&text=${message}`
   }
@@ -112,7 +113,7 @@ export default function CheckoutPage() {
 
     const deliveryInfo = isFreeDelivery
       ? cartItems.some(item => item.category === "Masala Powders")
-        ? "FREE Delivery (You saved ₹100!)"
+        ? `FREE Delivery (You saved ₹${isTamilNadu ? "60" : "120"}/kg!)`
         : "FREE Delivery"
       : `Delivery Charge: ₹${deliveryCharge.toFixed(2)}`
 
@@ -123,6 +124,7 @@ Customer Information:
 Name: ${formData.fullName}
 Phone: ${formData.phoneNumber}
 Address: ${fullAddress}
+Location: ${isTamilNadu ? "Tamil Nadu" : "Outside Tamil Nadu"}
 
 Order Details:
 ${orderDetails}
@@ -257,7 +259,7 @@ Time: ${new Date().toLocaleTimeString()}
                       Add ₹{599 - subtotal} more for FREE delivery on Masala Powders!
                     </p>
                     <p className="text-orange-600 text-xs sm:text-sm">
-                      Currently: ₹{formData.state.toLowerCase().includes("tamil nadu") ? "60" : "120"}/kg delivery charge for Masala Powders • Free delivery on orders ₹599+
+                      Currently: ₹{isTamilNadu ? "60" : "120"}/kg delivery charge for Masala Powders • Free delivery on orders ₹599+
                     </p>
                   </div>
                 </div>
@@ -275,7 +277,7 @@ Time: ${new Date().toLocaleTimeString()}
                   <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
                   <div>
                     <p className="font-semibold text-orange-800 text-sm sm:text-base">
-                      Delivery charge for Flours & Mixes and Bathing Powders: ₹{formData.state.toLowerCase().includes("tamil nadu") ? "90" : "180"} per kg
+                      Delivery charge for Flours & Mixes and Bathing Powders: ₹{isTamilNadu ? "90" : "180"} per kg
                     </p>
                     <p className="text-orange-600 text-xs sm:text-sm">
                       Current delivery charge: ₹{deliveryCharge.toFixed(2)}
@@ -298,7 +300,7 @@ Time: ${new Date().toLocaleTimeString()}
                     <p className="font-semibold text-green-800 text-sm sm:text-base">
                       🎉 Congratulations! You've earned FREE delivery on Masala Powders!
                     </p>
-                    <p className="text-green-600 text-xs sm:text-sm">You saved ₹{formData.state.toLowerCase().includes("tamil nadu") ? "60" : "120"}/kg on delivery</p>
+                    <p className="text-green-600 text-xs sm:text-sm">You saved ₹{isTamilNadu ? "60" : "120"}/kg on delivery</p>
                   </div>
                 </div>
               </CardContent>
@@ -496,6 +498,25 @@ Time: ${new Date().toLocaleTimeString()}
 
                 <hr className="border-green-200" />
 
+                {/* Location Checkbox */}
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="location"
+                    checked={isTamilNadu}
+                    onCheckedChange={(checked) => setIsTamilNadu(checked === true)}
+                  />
+                  <Label htmlFor="location" className="text-gray-700 font-semibold text-sm sm:text-base">
+                    Delivery within Tamil Nadu
+                  </Label>
+                </div>
+                <p className="text-xs sm:text-sm text-gray-600">
+                  {isTamilNadu
+                    ? "₹60/kg for Masala Powders, ₹90/kg for other categories"
+                    : "₹120/kg for Masala Powders, ₹180/kg for other categories"}
+                </p>
+
+                <hr className="border-green-200" />
+
                 {/* Pricing Breakdown */}
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
@@ -513,7 +534,7 @@ Time: ${new Date().toLocaleTimeString()}
                         <div>
                           <span className="font-bold text-green-600">FREE</span>
                           {cartItems.some(item => item.category === "Masala Powders") && (
-                            <p className="text-xs text-gray-500 line-through">₹{formData.state.toLowerCase().includes("tamil nadu") ? "60" : "120"}/kg</p>
+                            <p className="text-xs text-gray-500 line-through">₹{isTamilNadu ? "60" : "120"}/kg</p>
                           )}
                         </div>
                       ) : (
@@ -531,7 +552,7 @@ Time: ${new Date().toLocaleTimeString()}
                     <span className="text-2xl sm:text-4xl font-bold text-gradient">₹{finalTotal.toFixed(2)}</span>
                   </div>
                   {isFreeDelivery && cartItems.some(item => item.category === "Masala Powders") && (
-                    <p className="text-sm text-green-600 mt-2 text-center">🎉 You saved ₹{formData.state.toLowerCase().includes("tamil nadu") ? "60" : "120"}/kg on delivery!</p>
+                    <p className="text-sm text-green-600 mt-2 text-center">🎉 You saved ₹{isTamilNadu ? "60" : "120"}/kg on delivery!</p>
                   )}
                 </div>
               </CardContent>
