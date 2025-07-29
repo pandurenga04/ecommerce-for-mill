@@ -233,29 +233,6 @@ export default function CartPage() {
           <p className="text-base sm:text-xl text-gray-600">Review your selected items</p>
         </div>
 
-        {/* Location Checkbox */}
-        <div className="mb-6 sm:mb-8">
-          <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="location"
-                  checked={isTamilNadu}
-                  onCheckedChange={(checked) => setIsTamilNadu(checked === true)}
-                />
-                <Label htmlFor="location" className="text-gray-700 font-semibold text-sm sm:text-base">
-                  Delivery within Tamil Nadu
-                </Label>
-              </div>
-              <p className="text-xs sm:text-sm text-gray-600 mt-2">
-                {isTamilNadu
-                  ? "₹60/kg for Masala Powders, ₹90/kg for other categories"
-                  : "₹120/kg for Masala Powders, ₹180/kg for other categories"}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
         {/* Free Delivery Banner for Masala Powders */}
         {!isFreeDelivery && subtotal < 599 && cartItems.some(item => item.category === "Masala Powders") && (
           <div className="mb-6 sm:mb-8">
@@ -424,6 +401,25 @@ export default function CartPage() {
                     </div>
                   ))}
                 </div>
+
+                <hr className="border-green-200" />
+
+                {/* Location Checkbox */}
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="location"
+                    checked={isTamilNadu}
+                    onCheckedChange={(checked) => setIsTamilNadu(checked === true)}
+                  />
+                  <Label htmlFor="location" className="text-gray-700 font-semibold text-sm sm:text-base">
+                    Delivery within Tamil Nadu
+                  </Label>
+                </div>
+                <p className="text-xs sm:text-sm text-gray-600">
+                  {isTamilNadu
+                    ? "₹60/kg for Masala Powders, ₹90/kg for other categories"
+                    : "₹120/kg for Masala Powders, ₹180/kg for other categories"}
+                </p>
 
                 <hr className="border-green-200" />
 
