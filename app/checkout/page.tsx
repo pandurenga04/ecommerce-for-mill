@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -48,33 +47,36 @@ export default function CheckoutPage() {
   // Calculate delivery charge based on new rules
   const calculateDeliveryCharge = () => {
     const subtotal = getTotalPrice()
-    let totalWeightKg = 0
+    let masalaWeightKg = 0
+    let otherWeightKg = 0
     let hasMasala = false
+    const isTamilNadu = formData.state.toLowerCase().includes("tamil nadu")
 
     cartItems.forEach((item) => {
+      const weightStr = item.weight.toLowerCase()
+      let weightKg = 0
+      if (weightStr.includes("kg")) {
+        weightKg = parseFloat(weightStr.replace("kg", ""))
+      } else if (weightStr.includes("g")) {
+        weightKg = parseFloat(weightStr.replace("g", "")) / 1000
+      }
+
       if (item.category === "Masala Powders") {
         hasMasala = true
+        masalaWeightKg += weightKg * item.quantity
       } else {
-        // Parse weight (e.g., "100g", "250g", "500g", "1kg") to kilograms
-        const weightStr = item.weight.toLowerCase()
-        let weightKg = 0
-        if (weightStr.includes("kg")) {
-          weightKg = parseFloat(weightStr.replace("kg", ""))
-        } else if (weightStr.includes("g")) {
-          weightKg = parseFloat(weightStr.replace("g", "")) / 1000
-        }
-        totalWeightKg += weightKg * item.quantity
+        otherWeightKg += weightKg * item.quantity
       }
     })
 
     let deliveryCharge = 0
-    // Masala Powders: ₹100 if subtotal < ₹699, free otherwise
-    if (hasMasala && subtotal < 699) {
-      deliveryCharge += 100
+    // Masala Powders: Free delivery if subtotal >= ₹599, else ₹60/kg in TN, ₹120/kg outside TN
+    if (hasMasala && subtotal < 599) {
+      deliveryCharge += isTamilNadu ? masalaWeightKg * 60 : masalaWeightKg * 120
     }
-    // Other categories: ₹60 per kg
-    if (totalWeightKg > 0) {
-      deliveryCharge += totalWeightKg * 60
+    // Other categories: ₹90/kg in TN, ₹180/kg outside TN
+    if (otherWeightKg > 0) {
+      deliveryCharge += isTamilNadu ? otherWeightKg * 90 : otherWeightKg * 180
     }
 
     return deliveryCharge
@@ -244,7 +246,7 @@ Time: ${new Date().toLocaleTimeString()}
         </div>
 
         {/* Free Delivery Banner for Masala Powders */}
-        {!isFreeDelivery && subtotal < 699 && cartItems.some(item => item.category === "Masala Powders") && (
+        {!isFreeDelivery && subtotal < 599 && cartItems.some(item => item.category === "Masala Powders") && (
           <div className="mb-6 sm:mb-8">
             <Card className="border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-yellow-50">
               <CardContent className="p-4 sm:p-6">
@@ -252,10 +254,10 @@ Time: ${new Date().toLocaleTimeString()}
                   <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
                   <div>
                     <p className="font-semibold text-orange-800 text-sm sm:text-base">
-                      Add ₹{699 - subtotal} more for FREE delivery on Masala Powders!
+                      Add ₹{599 - subtotal} more for FREE delivery on Masala Powders!
                     </p>
                     <p className="text-orange-600 text-xs sm:text-sm">
-                      Currently: ₹100 delivery charge for Masala Powders • Free delivery on orders ₹699+
+                      Currently: ₹{formData.state.toLowerCase().includes("tamil nadu") ? "60" : "120"}/kg delivery charge for Masala Powders • Free delivery on orders ₹599+
                     </p>
                   </div>
                 </div>
@@ -273,7 +275,7 @@ Time: ${new Date().toLocaleTimeString()}
                   <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
                   <div>
                     <p className="font-semibold text-orange-800 text-sm sm:text-base">
-                      Delivery charge for Flours & Mixes and Bathing Powders: ₹60 per kg
+                      Delivery charge for Flours & Mixes and Bathing Powders: ₹{formData.state.toLowerCase().includes("tamil nadu") ? "90" : "180"} per kg
                     </p>
                     <p className="text-orange-600 text-xs sm:text-sm">
                       Current delivery charge: ₹{deliveryCharge.toFixed(2)}
@@ -296,7 +298,7 @@ Time: ${new Date().toLocaleTimeString()}
                     <p className="font-semibold text-green-800 text-sm sm:text-base">
                       🎉 Congratulations! You've earned FREE delivery on Masala Powders!
                     </p>
-                    <p className="text-green-600 text-xs sm:text-sm">You saved ₹100 on delivery</p>
+                    <p className="text-green-600 text-xs sm:text-sm">You saved ₹{formData.state.toLowerCase().includes("tamil nadu") ? "60" : "120"}/kg on delivery</p>
                   </div>
                 </div>
               </CardContent>
@@ -511,7 +513,7 @@ Time: ${new Date().toLocaleTimeString()}
                         <div>
                           <span className="font-bold text-green-600">FREE</span>
                           {cartItems.some(item => item.category === "Masala Powders") && (
-                            <p className="text-xs text-gray-500 line-through">₹100</p>
+                            <p className="text-xs text-gray-500 line-through">₹{formData.state.toLowerCase().includes("tamil nadu") ? "60" : "120"}/kg</p>
                           )}
                         </div>
                       ) : (
@@ -529,7 +531,7 @@ Time: ${new Date().toLocaleTimeString()}
                     <span className="text-2xl sm:text-4xl font-bold text-gradient">₹{finalTotal.toFixed(2)}</span>
                   </div>
                   {isFreeDelivery && cartItems.some(item => item.category === "Masala Powders") && (
-                    <p className="text-sm text-green-600 mt-2 text-center">🎉 You saved ₹100 on delivery!</p>
+                    <p className="text-sm text-green-600 mt-2 text-center">🎉 You saved ₹{formData.state.toLowerCase().includes("tamil nadu") ? "60" : "120"}/kg on delivery!</p>
                   )}
                 </div>
               </CardContent>
